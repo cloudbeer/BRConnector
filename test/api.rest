@@ -1,0 +1,19 @@
+@hostLocal=http://127.0.0.1:8866/v1
+
+### /v1/chat/completions
+POST {{hostLocal}}/chat/completions
+Content-Type: application/json
+Authorization: Bearer eiai_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+{
+  "model": "claude-3-sonnet",
+  "messages": [
+    {
+      "role": "user",
+      "content": "ping"
+    }
+  ],
+  "max_tokens": 4096
+}
+
+
