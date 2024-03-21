@@ -6,7 +6,6 @@ import { refineModelParameters } from "./common";
 const providers: any = {
     "bedrock-claude3": new BedrockClaude(),
     chat: (ctx: Context) => {
-        ctx.status = 200;
         const chatRequest: ChatRequest = ctx.request.body;
         refineModelParameters(chatRequest);
         return providers[chatRequest.provider].chat(chatRequest, ctx);

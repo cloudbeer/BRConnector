@@ -4,6 +4,7 @@ import {
     BedrockRuntimeClient,
     InvokeModelWithResponseStreamCommand,
 } from "@aws-sdk/client-bedrock-runtime";
+import { Readable } from 'stream';
 import config from '../config';
 import responseUtil from '../util/response';
 
@@ -93,12 +94,19 @@ export default class BedrockClaude extends Provider {
             modelId: chatRequest.model_id,
         };
 
-
         try {
             const command = new InvokeModelWithResponseStreamCommand(input);
             const response = await this.client.send(command);
 
             if (response.body) {
+                ctx.status = 200;
+                ctx.set({
+                    'Connection': 'keep-alive',
+                    'Cache-Control': 'no-cache',
+                    // 'Content-Type': 'text/event-stream',
+                });
+                const stream = new Readable({ read: () => { } });
+                ctx.body = stream;
                 for await (const item of response.body) {
                     if (item.chunk?.bytes) {
                         const decodedResponseBody = new TextDecoder().decode(
@@ -106,12 +114,15 @@ export default class BedrockClaude extends Provider {
                         );
                         const responseBody = JSON.parse(decodedResponseBody);
                         if (responseBody.delta?.type === "text_delta") {
-                            // console.log(responseBody.delta.text);
-                            ctx.res.write(responseBody.delta.text);
+                            stream.push(responseBody.delta.text);
+                            // ctx.res.write(responseBody.delta.text);
+                            // stream.write(responseBody.delta.text);
+                            console.log(responseBody.delta.text);
                         }
                     }
                 }
-                ctx.res.end();
+                stream.push(null);
+                // ctx.res.end();
             } else {
                 // Handle errors
                 ctx.body = responseUtil.error("Error invoking model");
