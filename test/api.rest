@@ -1,4 +1,4 @@
-@hostLocal=http://127.0.0.1:8866/v1
+@hostLocal=http://localhost:8866/v1
 
 ### /v1/chat/completions
 POST {{hostLocal}}/chat/completions
