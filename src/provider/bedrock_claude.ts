@@ -103,7 +103,7 @@ export default class BedrockClaude extends Provider {
                 ctx.set({
                     'Connection': 'keep-alive',
                     'Cache-Control': 'no-cache',
-                    // 'Content-Type': 'text/event-stream',
+                    'Content-Type': 'application/event-stream',
                 });
                 const stream = new Readable({ read: () => { } });
                 ctx.body = stream;
