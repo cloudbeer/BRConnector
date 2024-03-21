@@ -7,7 +7,7 @@ interface Content {
 
 interface Message {
     role: string;
-    content: Content;
+    content: any;
 }
 
 interface ChatRequest {
