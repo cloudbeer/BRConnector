@@ -4,7 +4,6 @@ import provider from '../../provider/providers';
 
 export default {
     completions: async (ctx: any) => {
-        const chatRequest: ChatRequest = ctx.request.body;
-        return provider.chat(chatRequest, ctx);
+        return provider.chat(ctx);
     }
 }
