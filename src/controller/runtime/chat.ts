@@ -1,9 +1,8 @@
-import { ChatRequest } from '../../entity/chat_request';
-import { refineModelParameters } from '../../provider/common';
+import { Context } from 'koa'
 import provider from '../../provider/providers';
 
 export default {
-    completions: async (ctx: any) => {
+    completions: async (ctx: Context) => {
         return provider.chat(ctx);
     }
 }
