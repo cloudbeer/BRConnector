@@ -2,11 +2,11 @@ import { Context } from "koa";
 import { ChatRequest } from "../entity/chat_request"
 import BedrockClaude from "./bedrock_claude"
 import { refineModelParameters } from "./common";
-import { BodyParser } from 'body-parser'
 
 const providers: any = {
     "bedrock-claude3": new BedrockClaude(),
     chat: (ctx: Context) => {
+        ctx.status = 200;
         const chatRequest: ChatRequest = ctx.request.body;
         refineModelParameters(chatRequest);
         return providers[chatRequest.provider].chat(chatRequest, ctx);

@@ -17,9 +17,11 @@
     "@types/koa-router": "^7.4.8",
     "@types/koa__cors": "^5.0.0",
     "koa": "^2.15.1",
-    "koa-router": "^12.0.1"
+    "koa-router": "^12.0.1",
+    "pg": "^8.11.3"
   },
   "devDependencies": {
+    "@types/pg": "^8.11.4",
     "nodemon": "^3.1.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.2"
