@@ -4,9 +4,7 @@ import {
     BedrockRuntimeClient,
     InvokeModelWithResponseStreamCommand,
 } from "@aws-sdk/client-bedrock-runtime";
-import { Readable } from 'stream';
 import config from '../config';
-import responseUtil from '../util/response';
 
 export default class BedrockClaude extends Provider {
 
@@ -75,7 +73,6 @@ export default class BedrockClaude extends Provider {
 
     async chat(chatRequest: ChatRequest, ctx: any) {
         const payload = this.convertMessagePayload(chatRequest);
-        // console.log(payload);
 
         const body: any = {
             "anthropic_version": chatRequest["anthropic_version"],
@@ -87,6 +84,8 @@ export default class BedrockClaude extends Provider {
             body.system = JSON.stringify(payload.systemPrompt);
         }
 
+        console.log(body);
+
         const input = {
             body: JSON.stringify(body),
             contentType: "application/json",
@@ -94,19 +93,23 @@ export default class BedrockClaude extends Provider {
             modelId: chatRequest.model_id,
         };
 
+        ctx.status = 200;
+        ctx.set({
+            'Connection': 'keep-alive',
+            'Cache-Control': 'no-cache',
+            'Content-Type': 'text/event-stream',
+        });
+
+        let i = 0;
+        // ctx.res.write("id: " + i + "\n");
+        // ctx.res.write("event: open\n");
+        // ctx.res.write("data: ok\n\n");
+
         try {
             const command = new InvokeModelWithResponseStreamCommand(input);
             const response = await this.client.send(command);
 
             if (response.body) {
-                ctx.status = 200;
-                ctx.set({
-                    'Connection': 'keep-alive',
-                    'Cache-Control': 'no-cache',
-                    'Content-Type': 'application/event-stream',
-                });
-                const stream = new Readable({ read: () => { } });
-                ctx.body = stream;
                 for await (const item of response.body) {
                     if (item.chunk?.bytes) {
                         const decodedResponseBody = new TextDecoder().decode(
@@ -114,23 +117,41 @@ export default class BedrockClaude extends Provider {
                         );
                         const responseBody = JSON.parse(decodedResponseBody);
                         if (responseBody.delta?.type === "text_delta") {
-                            stream.push(responseBody.delta.text);
-                            // ctx.res.write(responseBody.delta.text);
-                            // stream.write(responseBody.delta.text);
-                            console.log(responseBody.delta.text);
+                            i++;
+                            ctx.res.write("id: " + i + "\n");
+                            ctx.res.write("event: message\n");
+                            ctx.res.write("data: " + JSON.stringify({
+                                choices: [
+                                    { delta: { content: responseBody.delta.text } }
+                                ]
+                            }) + "\n\n");
                         }
                     }
                 }
-                stream.push(null);
-                // ctx.res.end();
             } else {
-                // Handle errors
-                ctx.body = responseUtil.error("Error invoking model");
+                ctx.res.write("id: " + (i + 1) + "\n");
+                ctx.res.write("event: message\n");
+                ctx.res.write("data: " + JSON.stringify({
+                    choices: [
+                        { delta: { content: "Error invoking model" } }
+                    ]
+                }) + "\n\n");
             }
         } catch (e: any) {
             console.error(e);
-            ctx.body = responseUtil.error("Error invoking model");
+            ctx.res.write("id: " + (i + 1) + "\n");
+            ctx.res.write("event: message\n");
+            ctx.res.write("data: " + JSON.stringify({
+                choices: [
+                    { delta: { content: "Error invoking model" } }
+                ]
+            }) + "\n\n");
         }
+
+        ctx.res.write("id: " + (i + 1) + "\n");
+        ctx.res.write("event: message\n");
+        ctx.res.write("data: [DONE]\n\n")
+        ctx.res.end();
     }
 
 
