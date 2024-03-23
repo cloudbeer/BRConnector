@@ -2,15 +2,14 @@ import { Client } from 'pg';
 import fs from 'fs';
 import config from './config';
 
-const client = new Client({
-    host: config.pgsql.host,
-    port: config.pgsql.port ? ~~config.pgsql.port : 5432,
-    database: config.pgsql.database,
-    user: config.pgsql.user,
-    password: config.pgsql.password,
-})
-
 export default async function () {
+    const client = new Client({
+        host: config.pgsql.host,
+        port: config.pgsql.port ? ~~config.pgsql.port : 5432,
+        database: config.pgsql.database,
+        user: config.pgsql.user,
+        password: config.pgsql.password,
+    })
     try {
         await client.connect();
     } catch (err: any) {
@@ -29,10 +28,9 @@ export default async function () {
         await client.query(sqlCreate);
         console.log("Created successfully.");
     }
+    await client.end();
     const adminKey = process.env.ADMIN_API_KEY;
     if (!adminKey) {
         console.error("❌ Admin API key not set, please set 'ADMIN_API_KEY' in env.");
     }
-    await client.end()
-
 }

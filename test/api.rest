@@ -1,9 +1,9 @@
-@hostLocal=http://localhost:8866/v1
+@hostLocal=http://localhost:8866
 
 ### /v1/chat/completions
-POST {{hostLocal}}/chat/completions
+POST {{hostLocal}}/v1/chat/completions
 Content-Type: application/json
-Authorization: Bearer eiai_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 {
   "model": "claude-3-sonnet",
@@ -15,5 +15,46 @@ Authorization: Bearer eiai_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   ],
   "max_tokens": 4096
 }
+
+
+
+### add a user
+POST {{hostLocal}}/admin/api-key/apply
+Content-Type: application/json
+Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+{
+  "name": "jack",
+  "group_id": 1,
+  "role": "user"
+}
+
+
+### add an admin
+POST {{hostLocal}}/admin/api-key/apply
+Content-Type: application/json
+Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+{
+  "name": "rob",
+  "group_id": 1,
+  "role": "admin"
+}
+
+
+### use other key
+POST {{hostLocal}}/admin/api-key/apply
+Content-Type: application/json
+Authorization: Bearer br-uKUzZG3y1N9WB8qyhWCEVQ2ljHeSk
+
+{
+  "name": "rob2",
+  "group_id": 1,
+  "role": "user"
+}
+
+
+
+
 
 

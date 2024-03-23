@@ -84,7 +84,7 @@ export default class BedrockClaude extends Provider {
             body.system = JSON.stringify(payload.systemPrompt);
         }
 
-        console.log(body);
+        // console.log(body);
 
         const input = {
             body: JSON.stringify(body),
