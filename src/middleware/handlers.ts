@@ -9,7 +9,6 @@ const authHandler = async (ctx: any, next: any) => {
         throw new Error("Unauthorized: api key required");
     }
     if (api_key === config.admin_api_key) {
-        console.log("i am default admin");
         ctx.user = {
             id: 0,
             api_key: config.admin_api_key,
@@ -36,7 +35,7 @@ const authHandler = async (ctx: any, next: any) => {
     }
 
     const pathName = ctx.path;
-    console.log("pathName: " + pathName);
+    console.log("access: ", pathName);
     if (pathName.indexOf("/admin") >= 0) {
         if (!ctx.user || ctx.user.role !== "admin") {
             throw new Error("Unauthorized: you are not an admin role.")

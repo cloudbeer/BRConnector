@@ -1,6 +1,7 @@
 import { Client } from 'pg';
 import fs from 'fs';
 import config from './config';
+// import helper from './util/helper';
 
 export default async function () {
     const client = new Client({
@@ -29,7 +30,7 @@ export default async function () {
         console.log("Created successfully.");
     }
     await client.end();
-    const adminKey = process.env.ADMIN_API_KEY;
+    const adminKey = config.admin_api_key;
     if (!adminKey) {
         console.error("❌ Admin API key not set, please set 'ADMIN_API_KEY' in env.");
     }

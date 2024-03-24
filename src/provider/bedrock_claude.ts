@@ -5,6 +5,8 @@ import {
     InvokeModelWithResponseStreamCommand,
 } from "@aws-sdk/client-bedrock-runtime";
 import config from '../config';
+import helper from "../util/helper";
+
 
 export default class BedrockClaude extends Provider {
 
@@ -15,10 +17,44 @@ export default class BedrockClaude extends Provider {
         this.client = new BedrockRuntimeClient({ region: config.bedrock.region });
     }
 
+    async convertContent(content: any): Promise<any> {
+        if (typeof content === "string") {
+            return [{
+                type: "text",
+                text: content
+            }];
+        }
+        if (Array.isArray(content)) {
+            return Promise.all(content.map(async item => {
+                return await this.convertSingleType(item);
+            }));
+        }
+        return [];
+    }
+
+    async convertSingleType(contentItem: any) {
+        if (contentItem.type === "image_url") {
+            const url = contentItem.image_url.url;
+            const source = await helper.parseImageUrl(url);
+            return {
+                type: "image",
+                source
+            }
+        } else if (contentItem.type === "text") {
+            return {
+                type: "text",
+                text: contentItem.text
+            }
+        }
+        return contentItem;
+    }
+
     //TODO: Change playload, I need more information.
-    convertMessagePayload(chatRequest: ChatRequest): any {
+    async convertMessagePayload(chatRequest: ChatRequest): Promise<any> {
         const messages = chatRequest.messages;
         const lastMessage = messages.pop();
+
+        // console.log(lastMessage, isBedrockSchema, lastMessage?.content?.type);
 
         const systemMessages = messages.filter(message => message.role === 'system');
         const userMessages = messages.filter(message => message.role === 'user');
@@ -27,52 +63,50 @@ export default class BedrockClaude extends Provider {
         const systemPrompt = systemMessages.reduce((acc, message) => {
             return acc + message.content;
         }, "");
-        const userPrompts = userMessages.map(message => {
-            return {
-                type: "text",
-                text: message.content
-            }
-        });
-        const assistantPrompts = assistantMessages.map(message => ({
-            type: "text",
-            text: message.content
-        }));
+        const userPrompts = Promise.all(
+            userMessages.map(
+                async message => await this.convertContent(message.content)
+            )
+        );
+        // console.log("UUUUU", JSON.stringify(await userPrompts, null, 2))
+
+        const assistantPrompts = Promise.all(
+            assistantMessages.map(
+                async message => await this.convertContent(message.content)
+            )
+        );
 
         const new_messages: any = [];
+
         if (assistantMessages.length == 0) {
-            userPrompts.push({
-                type: "text",
-                text: lastMessage?.content
-            });
+            const content = await this.convertContent(lastMessage?.content)
             new_messages.push({
                 role: "user",
-                content: userPrompts
+                content
             });
         } else {
             new_messages.push({
                 role: "user",
-                content: userPrompts
+                content: (await userPrompts)[0]
             });
             new_messages.push({
                 role: "assistant",
-                content: assistantPrompts
+                content: (await assistantPrompts)[0]
             });
+            const content = await this.convertContent(lastMessage?.content)
             new_messages.push({
                 role: "user",
-                content: [{
-                    type: "text",
-                    text: lastMessage?.content
-                }]
-            })
+                content
+            });
         }
-
 
         return { messages: new_messages, systemPrompt }
 
     }
 
     async chat(chatRequest: ChatRequest, ctx: any) {
-        const payload = this.convertMessagePayload(chatRequest);
+        const payload = await this.convertMessagePayload(chatRequest);
+
 
         const body: any = {
             "anthropic_version": chatRequest["anthropic_version"],
@@ -84,7 +118,11 @@ export default class BedrockClaude extends Provider {
             body.system = JSON.stringify(payload.systemPrompt);
         }
 
+        // if (1 == 1) throw Error();
         // console.log(body);
+
+        // console.log(JSON.stringify(body, null, 2));
+
 
         const input = {
             body: JSON.stringify(body),
