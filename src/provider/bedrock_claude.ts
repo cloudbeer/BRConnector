@@ -2,10 +2,12 @@ import { ChatRequest } from "../entity/chat_request"
 import { Provider } from "./common"
 import {
     BedrockRuntimeClient,
+    InvokeModelCommand,
     InvokeModelWithResponseStreamCommand,
 } from "@aws-sdk/client-bedrock-runtime";
 import config from '../config';
 import helper from "../util/helper";
+import WebResponse from "../util/response";
 
 
 export default class BedrockClaude extends Provider {
@@ -132,17 +134,24 @@ export default class BedrockClaude extends Provider {
         };
 
         ctx.status = 200;
-        ctx.set({
-            'Connection': 'keep-alive',
-            'Cache-Control': 'no-cache',
-            'Content-Type': 'text/event-stream',
-        });
 
+        if (chatRequest.stream) {
+            ctx.set({
+                'Connection': 'keep-alive',
+                'Cache-Control': 'no-cache',
+                'Content-Type': 'text/event-stream',
+            });
+            await this.chatStream(ctx, input);
+        } else {
+            ctx.set({
+                'Content-Type': 'application/json',
+            });
+            ctx.body = await this.chatSync(input);
+        }
+    }
+
+    async chatStream(ctx: any, input: any) {
         let i = 0;
-        // ctx.res.write("id: " + i + "\n");
-        // ctx.res.write("event: open\n");
-        // ctx.res.write("data: ok\n\n");
-
         try {
             const command = new InvokeModelWithResponseStreamCommand(input);
             const response = await this.client.send(command);
@@ -192,5 +201,35 @@ export default class BedrockClaude extends Provider {
         ctx.res.end();
     }
 
+    async chatSync(input: any) {
+        try {
+            const command = new InvokeModelCommand(input);
+            const apiResponse = await this.client.send(command);
+
+            const decodedResponseBody = new TextDecoder().decode(apiResponse.body);
+
+            const responseBody = JSON.parse(decodedResponseBody);
+            return responseBody;
+            //res.choices?.at(0)?.message?.content ?? "";
+            // const choices = responseBody.content.map((c: any) => {
+            //     return {
+            //         message: {
+            //             content: c.text,
+            //             role: "assistant"
+            //         }
+            //     }
+            // });
+            // return {
+            //     choices, usage: {
+            //         completion_tokens: responseBody.usage.output_tokens,
+            //         prompt_tokens: responseBody.usage.input_tokens,
+            //         total_tokens: responseBody.usageinput_tokens + responseBody.usage.output_tokens,
+            //     }
+            // };
+        } catch (e: any) {
+            return WebResponse.error(e.message);
+        }
+
+    }
 
 }
