@@ -1,10 +1,10 @@
 export default {
     pgsql: {
-        host: process.env.PGSQL_HOST || "172.27.45.71",
+        host: process.env.PGSQL_HOST,
         port: process.env.PGSQL_PORT || 5432,
-        database: process.env.PGSQL_DATABASE || "eiai_proxy",
-        user: process.env.PGSQL_USER || "postgres",
-        password: process.env.PGSQL_PASSWORD || "mysecretpassword",
+        database: process.env.PGSQL_DATABASE,
+        user: process.env.PGSQL_USER,
+        password: process.env.PGSQL_PASSWORD,
         debugMode: true
     },
     bedrock: {
@@ -13,6 +13,6 @@ export default {
         aws_secret_key: process.env.AWS_SECRET_ACCESS_KEY,
         region: process.env.AWS_DEFAULT_REGION || "us-east-1"
     },
-    admin_api_key: process.env.ADMIN_API_KEY || "br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    admin_api_key: process.env.ADMIN_API_KEY
 
 }

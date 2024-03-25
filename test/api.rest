@@ -26,7 +26,8 @@ Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 {
   "name": "jack",
   "group_id": 1,
-  "role": "user"
+  "role": "user",
+  "email": ""
 }
 
 
@@ -38,7 +39,8 @@ Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 {
   "name": "rob",
   "group_id": 1,
-  "role": "admin"
+  "role": "admin",
+  "email": ""
 }
 
 
@@ -50,7 +52,8 @@ Authorization: Bearer br-uKUzZG3y1N9WB8qyhWCEVQ2ljHeSk
 {
   "name": "rob2",
   "group_id": 1,
-  "role": "user"
+  "role": "user",
+  "email": ""
 }
 
 

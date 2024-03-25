@@ -4,6 +4,9 @@ import config from './config';
 // import helper from './util/helper';
 
 export default async function () {
+    if (!config.pgsql.host || config.pgsql.database) {
+        console.error("❌ Postgres not configured, skip installation.");
+    }
     const client = new Client({
         host: config.pgsql.host,
         port: config.pgsql.port ? ~~config.pgsql.port : 5432,

@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS eiai_key (
     group_id int DEFAULT 0,
     api_key varchar(64) NOT NULL,
     name varchar(255) NOT NULL,
+    email varchar(255) NOT NULL,
     role varchar(64) DEFAULT 'user',
     created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
