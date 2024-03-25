@@ -7,8 +7,6 @@ import { router } from "./routes";
 import dotenv from 'dotenv';
 dotenv.config();
 
-console.log(process.env);
-
 import install from './install'
 
 install();
