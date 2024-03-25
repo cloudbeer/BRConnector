@@ -8,7 +8,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npx ts-node -T src/index.ts",
     "dev": "nodemon src/index.ts",
-    "build": "tsc ."
+    "build": "rm -rf ./dist/server && tsc --project ./tsconfig.json --outDir ./dist/server && cp ./package.json ./dist/server",
+    "run": "node dist/server/index.js"
   },
   "dependencies": {
     "@aws-sdk/client-bedrock-runtime": "^3.535.0",
