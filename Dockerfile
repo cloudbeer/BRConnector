@@ -4,6 +4,8 @@ WORKDIR /app
 
 COPY ./dist/server .
 
+COPY ./src/scripts/create.sql ./src/scripts/create.sql
+
 RUN npm install --omit=dev
 
 EXPOSE 8866

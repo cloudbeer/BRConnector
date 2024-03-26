@@ -4,7 +4,7 @@ import config from './config';
 // import helper from './util/helper';
 
 export default async function () {
-    if (!config.pgsql.host || config.pgsql.database) {
+    if (!config.pgsql.host || !config.pgsql.database) {
         console.error("❌ Postgres not configured, skip installation.");
         console.log("💡 You can use any fake api key to access this proxy's llm api.")
         return;

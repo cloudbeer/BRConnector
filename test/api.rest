@@ -13,6 +13,7 @@ Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
       "content": "ping"
     }
   ],
+  "stream": true,
   "max_tokens": 4096
 }
 

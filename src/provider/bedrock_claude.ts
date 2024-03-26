@@ -163,6 +163,7 @@ export default class BedrockClaude extends Provider {
                             item.chunk.bytes,
                         );
                         const responseBody = JSON.parse(decodedResponseBody);
+                        // console.log(responseBody);
                         if (responseBody.delta?.type === "text_delta") {
                             i++;
                             ctx.res.write("id: " + i + "\n");
@@ -172,6 +173,11 @@ export default class BedrockClaude extends Provider {
                                     { delta: { content: responseBody.delta.text } }
                                 ]
                             }) + "\n\n");
+                        } else if (responseBody.type === "message_stop") {
+                            const {
+                                inputTokenCount, outputTokenCount,
+                                invocationLatency, firstByteLatency
+                            } = responseBody["amazon-bedrock-invocationMetrics"];
                         }
                     }
                 }
