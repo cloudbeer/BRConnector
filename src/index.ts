@@ -1,11 +1,12 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import Koa from "koa";
 import { bodyParser } from "@koa/bodyparser"
 import cors from "@koa/cors"
 import { authHandler, errorHandler, databaseHandler } from './middleware/handlers'
 import { router } from "./routes";
 
-import dotenv from 'dotenv';
-dotenv.config();
 
 import install from './install'
 

@@ -1,5 +1,4 @@
-import { ChatRequest } from "../entity/chat_request"
-import { Provider } from "./common"
+import { ChatRequest, ResponseData } from "../entity/chat_request"
 import {
     BedrockRuntimeClient,
     InvokeModelCommand,
@@ -8,9 +7,10 @@ import {
 import config from '../config';
 import helper from "../util/helper";
 import WebResponse from "../util/response";
+import AbstractProvider from "./abstract_provider";
 
 
-export default class BedrockClaude extends Provider {
+export default class BedrockClaude extends AbstractProvider {
 
     client: BedrockRuntimeClient;
 
@@ -102,18 +102,22 @@ export default class BedrockClaude extends Provider {
             });
         }
 
+        messages.push(lastMessage); // restore origin request.
+
         return { messages: new_messages, systemPrompt }
 
     }
 
-    async chat(chatRequest: ChatRequest, ctx: any) {
+    async chat(chatRequest: ChatRequest, session_id: string, ctx: any) {
         const payload = await this.convertMessagePayload(chatRequest);
-
 
         const body: any = {
             "anthropic_version": chatRequest["anthropic_version"],
-            "max_tokens": chatRequest["max_tokens"] || 4096,
+            "max_tokens": chatRequest.max_tokens || 4096,
             "messages": payload.messages,
+            "temperature": chatRequest.temperature || 1.0,
+            "top_p": chatRequest.top_p || 1,
+            "top_k": chatRequest["top_k"] || 50
             // system: payload.system,
         };
         if (payload.systemPrompt && payload.systemPrompt.length > 0) {
@@ -141,22 +145,24 @@ export default class BedrockClaude extends Provider {
                 'Cache-Control': 'no-cache',
                 'Content-Type': 'text/event-stream',
             });
-            await this.chatStream(ctx, input);
+            await this.chatStream(ctx, input, chatRequest, session_id);
         } else {
             ctx.set({
                 'Content-Type': 'application/json',
             });
-            ctx.body = await this.chatSync(input);
+            ctx.body = await this.chatSync(ctx, input, chatRequest, session_id);
         }
     }
 
-    async chatStream(ctx: any, input: any) {
+    async chatStream(ctx: any, input: any, chatRequest: ChatRequest, session_id: string) {
         let i = 0;
         try {
             const command = new InvokeModelWithResponseStreamCommand(input);
             const response = await this.client.send(command);
 
+
             if (response.body) {
+                let responseText = "";
                 for await (const item of response.body) {
                     if (item.chunk?.bytes) {
                         const decodedResponseBody = new TextDecoder().decode(
@@ -166,6 +172,7 @@ export default class BedrockClaude extends Provider {
                         // console.log(responseBody);
                         if (responseBody.delta?.type === "text_delta") {
                             i++;
+                            responseText += responseBody.delta.text;
                             ctx.res.write("id: " + i + "\n");
                             ctx.res.write("event: message\n");
                             ctx.res.write("data: " + JSON.stringify({
@@ -178,6 +185,16 @@ export default class BedrockClaude extends Provider {
                                 inputTokenCount, outputTokenCount,
                                 invocationLatency, firstByteLatency
                             } = responseBody["amazon-bedrock-invocationMetrics"];
+
+                            const response: ResponseData = {
+                                text: responseText,
+                                input_tokens: inputTokenCount,
+                                output_tokens: outputTokenCount,
+                                invocation_latency: invocationLatency,
+                                first_byte_latency: firstByteLatency
+                            }
+
+                            await this.saveThread(ctx, session_id, chatRequest, response);
                         }
                     }
                 }
@@ -207,7 +224,7 @@ export default class BedrockClaude extends Provider {
         ctx.res.end();
     }
 
-    async chatSync(input: any) {
+    async chatSync(ctx: any, input: any, chatRequest: ChatRequest, session_id: string) {
         try {
             const command = new InvokeModelCommand(input);
             const apiResponse = await this.client.send(command);
@@ -215,6 +232,19 @@ export default class BedrockClaude extends Provider {
             const decodedResponseBody = new TextDecoder().decode(apiResponse.body);
 
             const responseBody = JSON.parse(decodedResponseBody);
+
+
+            const response: ResponseData = {
+                text: responseBody.content[0].text,
+                input_tokens: responseBody.usage.input_tokens,
+                output_tokens: responseBody.usage.output_tokens,
+                invocation_latency: 0,
+                first_byte_latency: 0
+            }
+
+            await this.saveThread(ctx, session_id, chatRequest, response);
+
+
             return responseBody;
             //res.choices?.at(0)?.message?.content ?? "";
             // const choices = responseBody.content.map((c: any) => {
@@ -229,7 +259,7 @@ export default class BedrockClaude extends Provider {
             //     choices, usage: {
             //         completion_tokens: responseBody.usage.output_tokens,
             //         prompt_tokens: responseBody.usage.input_tokens,
-            //         total_tokens: responseBody.usageinput_tokens + responseBody.usage.output_tokens,
+            //         total_tokens: responseBody.usage.input_tokens + responseBody.usage.output_tokens,
             //     }
             // };
         } catch (e: any) {

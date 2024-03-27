@@ -1,6 +1,7 @@
 import Router from "koa-router";
 import chat from './controller/runtime/chat';
 import api_key from './controller/admin/api_key';
+import session from './controller/admin/session';
 
 export const router = new Router();
 
@@ -15,3 +16,4 @@ router.get("/", ctx => {
 router.post("/v1/chat/completions", chat.completions);
 
 router.post("/admin/api-key/apply", api_key.apply);
+router.get("/admin/session/detail", session.detail);

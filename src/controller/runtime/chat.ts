@@ -1,4 +1,4 @@
-import provider from '../../provider/providers';
+import provider from '../../providers/provider';
 
 export default {
     completions: async (ctx: any) => {

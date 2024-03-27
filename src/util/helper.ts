@@ -1,9 +1,11 @@
+
+import { ChatRequest } from "../entity/chat_request"
+
 export default {
     genApiKey() {
-
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         let key = '';
-        const keyLength = 29; // 设置 API 密钥长度
+        const keyLength = 29;
 
         for (let i = 0; i < keyLength; i++) {
             key += chars.charAt(Math.floor(Math.random() * chars.length));
@@ -33,6 +35,43 @@ export default {
             }
         }
         return null;
+    },
+    refineModelParameters: (chatRequest: ChatRequest) => {
+        switch (chatRequest.model) {
+            case 'claude-3-sonnet':
+                chatRequest.model_id = "anthropic.claude-3-sonnet-20240229-v1:0";
+                chatRequest.anthropic_version = "bedrock-2023-05-31";
+                chatRequest.provider = "bedrock-claude3";
+                chatRequest.price_in = 3.00 / 1000000;
+                chatRequest.price_out = 15.00 / 1000000;
+                chatRequest.currency = "USD";
+                return chatRequest;
+            case 'claude-3-haiku':
+                chatRequest.model_id = "anthropic.claude-3-haiku-20240307-v1:0";
+                chatRequest.anthropic_version = "bedrock-2023-05-31";
+                chatRequest.provider = "bedrock-claude3";
+                chatRequest.price_in = 0.25 / 1000000;
+                chatRequest.price_out = 1.25 / 1000000;
+                chatRequest.currency = "USD";
+                return chatRequest;
+            case 'claude-3-opus':
+                chatRequest.model_id = "anthropic.claude-3-opus-20240307-v1:0";
+                chatRequest.anthropic_version = "bedrock-2023-05-31";
+                chatRequest.provider = "bedrock-claude3";
+                chatRequest.price_in = 15.00 / 1000000;
+                chatRequest.price_out = 75.00 / 1000000;
+                chatRequest.currency = "USD";
+                return chatRequest;
+            default:
+                chatRequest.model_id = "anthropic.claude-3-sonnet-20240229-v1:0";
+                chatRequest.anthropic_version = "bedrock-2023-05-31";
+                chatRequest.provider = "bedrock-claude3";
+                chatRequest.price_in = 3.00 / 1000000;
+                chatRequest.price_out = 15.00 / 1000000;
+                chatRequest.currency = "USD";
+                return chatRequest;
+        }
     }
+
 
 }

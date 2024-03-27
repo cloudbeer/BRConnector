@@ -59,6 +59,15 @@ Authorization: Bearer br-uKUzZG3y1N9WB8qyhWCEVQ2ljHeSk
 
 
 
+### use other key
+GET {{hostLocal}}/admin/session/detail?id=1
+Content-Type: application/json
+Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+
+
+
 
 
 

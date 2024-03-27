@@ -87,11 +87,45 @@ export default class PGClient {
       params.push(data[keys[mIndex]]);
     }
 
-    const sql = `insert into ${table} (${keys.join(", ")}) values (${placeholders.join(", ")}) RETURNING *`;
+    const sql = `INSERT into ${table} (${keys.join(", ")}) values (${placeholders.join(", ")}) RETURNING id`;
 
     const result = await this.query(sql, params);
     return result[0];
     // console.log(result[0]);
+  }
+
+  public async update(table: string, data: any): Promise<any> {
+    if (!data.id) {
+      throw new Error("The updated data must include the id.");
+    }
+
+    const keys = Object.keys(data);
+    const idIndex = keys.indexOf("id");
+    // delete keys[idIndex];
+    keys.splice(idIndex, 1);
+
+    let placeholders = [];
+    let params = [];
+
+    for (const keyIndex in keys) {
+      const mIndex = ~~keyIndex;
+      placeholders.push(`$${(mIndex + 1)}`);
+      params.push(data[keys[mIndex]]);
+    }
+
+    const sql = `UPDATE ${table} SET (${keys.join(", ")}) = (${placeholders.join(", ")}) WHERE id=${data.id} RETURNING id`;
+
+    const result = await this.query(sql, params);
+    return result[0];
+
+  }
+
+  public save(table: string, data: any): Promise<any> {
+    if (data.id) {
+      return this.update(table, data);
+    } else {
+      return this.insert(table, data);
+    }
   }
 
 

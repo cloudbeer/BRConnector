@@ -34,4 +34,12 @@ interface ChatRequest {
 //   }
 // }
 
-export { ChatRequest };
+interface ResponseData {
+    text: string;
+    input_tokens: number;
+    output_tokens: number;
+    invocation_latency?: number;
+    first_byte_latency?: number;
+}
+
+export { ChatRequest, ResponseData };

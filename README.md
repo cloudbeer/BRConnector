@@ -28,6 +28,7 @@ node dist/server/node.js
 yarn start
 ```
 
+
 ## Docker
 
 Build Docker
@@ -43,7 +44,7 @@ docker run --name brproxy \
  -e AWS_SECRET_ACCESS_KEY=xxxxx \
  -e AWS_DEFAULT_REGION=us-east-1 \
  -e PGSQL_HOST=127.0.0.1 \
- -d cloudbeer/brproxy:0.0.1
+ -d cloudbeer/brproxy:0.0.3
 ```
 
 ## API Specification
@@ -63,6 +64,8 @@ Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
       "content": "ping"
     }
   ],
+  "stream": true,
+  "temperature": 1,
   "max_tokens": 4096
 }
 ```

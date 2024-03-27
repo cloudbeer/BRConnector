@@ -1,5 +1,6 @@
 import helper from "../../util/helper";
 
+import WebResponse from "../../util/response";
 export default {
 
     apply: async (ctx: any) => {
@@ -11,7 +12,7 @@ export default {
         let apiKey: string = "";
         for (let i = 0; i < 10; i++) {
             apiKey = helper.genApiKey();
-            console.log(apiKey);
+            // console.log(apiKey);
             const existsKey = await ctx.db.loadByKV("eiai_key", "api_key", apiKey)
             if (!existsKey) {
                 break;
@@ -26,7 +27,7 @@ export default {
             role: body.role || "user",
         });
 
-        ctx.body = result;
+        ctx.body = WebResponse.ok(result);
     }
 
 }
