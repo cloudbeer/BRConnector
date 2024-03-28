@@ -41,6 +41,12 @@ const authHandler = async (ctx: any, next: any) => {
             throw new Error("Unauthorized: you are not an admin role.")
         }
     }
+
+    if (pathName.indexOf("/user") >= 0) {
+        if (!ctx.user) {
+            throw new Error("Unauthorized: you are not a member.")
+        }
+    }
     await next();
 
 };

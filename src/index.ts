@@ -27,7 +27,6 @@ app.use(authHandler);
 
 app.use(router.routes());
 
-
 const port = 8866;
 
 app.listen(port, () => {

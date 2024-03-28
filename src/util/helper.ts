@@ -71,6 +71,10 @@ export default {
                 chatRequest.currency = "USD";
                 return chatRequest;
         }
+    },
+
+    sleep: (ms: number) => {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
 
 

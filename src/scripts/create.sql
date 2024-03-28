@@ -3,10 +3,14 @@ CREATE TABLE IF NOT EXISTS eiai_key (
     id serial PRIMARY KEY,
     group_id int DEFAULT 0,
     api_key varchar(64) NOT NULL,
-    name varchar(255) NOT NULL,
-    email varchar(255) NOT NULL,
+    name varchar(255) NULL,
+    email varchar(255) NULL,
     role varchar(64) DEFAULT 'user',
-    quota INT DEFAULT -1,
+    total_fee DECIMAL(16, 10) DEFAULT 0.00,
+    balance_fee DECIMAL(16, 10) DEFAULT 0.00,
+    peorid_fee DECIMAL(16, 10) DEFAULT 0.00,
+    quota_fee DECIMAL(16, 10) DEFAULT 0.00,
+    balance_fee DECIMAL(16, 10) DEFAULT 0.00,
     created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

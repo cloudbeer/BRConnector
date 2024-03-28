@@ -7,9 +7,44 @@ English / [简体中文](./README_CN.md)
 
 </div>
 
-## Installation
+## Dev Mode
 
-Dev mode
+### Run postgres locally:
+
+```shell
+docker run --name postgres \
+  -e POSTGRES_PASSWORD=mysecretpassword \
+  -p 5432:5432 \
+  -d postgres
+```
+
+Create an database named `eiai_proxy`:
+
+```shell
+docker exec -it postgres psql -U postgres
+```
+and run
+
+```sql
+CREATE DATABASE eiai_proxy;
+```
+
+
+### Environment .env file
+
+Place it in the root directory of the project.
+
+```env
+PGSQL_HOST=127.0.0.1
+PGSQL_DATABASE=eiai_proxy
+PGSQL_USER=postgres
+PGSQL_PASSWORD=mysecretpassword
+PGSQL_DEBUG_MODE=ok
+ADMIN_API_KEY=br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+
+### Run it:
 
 ```shell
 npm run dev
@@ -17,14 +52,38 @@ npm run dev
 yarn dev
 ```
 
-Prod mode
+If you have configured postgres, the tables will be created automatically.
+
+
+### Test it
+
+- Use [BRClient](https://github.com/DamonDeng/BRClient) to test AI APIs.
+
+- Use Postman to test it. 
+
+- Some APIs' spec will be found in `test/api.rest`
+
+## Prod mode
+
+Configure your environment variables.
+
+Managed RDS for postgres is recommended.
 
 ```shell
 npm run build 
+
+# then
+
 node dist/server/node.js
+```
 
-# or
+or 
 
+refer to the [Dockerfile](./Dockerfile) to organize your folder and dependencies.
+
+or
+
+```shell
 yarn start
 ```
 
@@ -44,8 +103,15 @@ docker run --name brproxy \
  -e AWS_SECRET_ACCESS_KEY=xxxxx \
  -e AWS_DEFAULT_REGION=us-east-1 \
  -e PGSQL_HOST=127.0.0.1 \
+ -e PGSQL_DATABASE=eiai_proxy \
+ -e PGSQL_USER=postgres \
+ -e PGSQL_PASSWORD=mysecretpassword \
+ -e ADMIN_API_KEY=br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx \
  -d cloudbeer/brproxy:0.0.3
 ```
+
+
+
 
 ## API Specification
 
@@ -70,9 +136,9 @@ Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 }
 ```
 
-### Manage API
+### Admin API
 
-Apply an api key
+Create an api key
 
 ```text
 POST /admin/api-key/apply
@@ -87,7 +153,7 @@ Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 }
 ```
 
-Apply an api key with admin role
+Create an api key with admin role
 
 ```text
 POST /admin/api-key/apply
@@ -100,4 +166,52 @@ Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   "role": "admin",
   "email": ""
 }
+```
+
+List api keys
+
+```text
+GET /admin/api-key/list?q=cl&limit=10&offset=
+```
+
+List sessions
+
+```text
+GET /admin/session/list?q=&limit=10&offset=&key_id=
+```
+
+
+List threads / histories
+
+```text
+GET /admin/thread/list?q=&limit=10&offset=&key_id=&session_id=
+```
+
+
+### User API
+
+
+My sessions
+
+```text
+GET /user/session/list?q=&limit=10&offset=
+```
+
+My session detail
+
+```text
+GET /user/session/detail/1
+```
+
+
+My threads / histories
+
+```text
+GET /user/thread/list?q=&limit=10&offset=&session_id=
+```
+
+My thread detail
+
+```text
+GET /user/thread/detail/1
 ```

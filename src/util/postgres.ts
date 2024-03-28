@@ -128,6 +128,42 @@ export default class PGClient {
     }
   }
 
+  public list(table: string, conditions: any): Promise<any> {
+    conditions = conditions || {};
+    if (!conditions.cols) {
+      conditions.cols = '*';
+    }
+    if (!conditions.offset) {
+      conditions.offset = 0;
+    }
+    if (!conditions.limit) {
+      conditions.limit = 5;
+    }
+    if (!conditions.where) {
+      conditions.where = "1=1"
+    }
+    if (conditions.orderBy) {
+      conditions.orderBy = 'order by ' + conditions.orderBy;
+    } else {
+      conditions.orderBy = '';
+    }
+    // table = "`" + table + "`";
+    var sql = `select ${conditions.cols} from ${table} where ${conditions.where} ${conditions.orderBy} limit ${conditions.limit} offset ${conditions.offset}`;
+    return this.query(sql, conditions.params);
+  }
+
+  public async count(table: string, conditions: any): Promise<number> {
+    conditions = conditions || {};
+    conditions.where = conditions.where || "1=1";
+    // table = "`" + table + "`";
+    var sql = `select count(*) as ct from ${table} where ${conditions.where} `;
+    var rows = await this.query(sql, conditions.params);
+    if (rows.length > 0) {
+      return rows[0].ct;
+    }
+    return 0;
+
+  }
 
 }
 

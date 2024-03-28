@@ -28,7 +28,7 @@ Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   "name": "jack",
   "group_id": 1,
   "role": "user",
-  "email": ""
+  "email": "cloudbeer@gmail.com"
 }
 
 
@@ -41,7 +41,7 @@ Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   "name": "rob",
   "group_id": 1,
   "role": "admin",
-  "email": ""
+  "email": "cloudbeer@gmail.com"
 }
 
 
@@ -57,12 +57,54 @@ Authorization: Bearer br-uKUzZG3y1N9WB8qyhWCEVQ2ljHeSk
   "email": ""
 }
 
+### list api key
+GET {{hostLocal}}/admin/api-key/list?q=cl&limit=10&offset=
+Content-Type: application/json
+Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+### list api key
+GET {{hostLocal}}/admin/api-key/list?q=cl&limit=10&offset=
+Content-Type: application/json
+Authorization: Bearer br-XRj9hvd6zsxQo3AIUqMBYqYQemKZK
 
 
-### use other key
+### session detail
 GET {{hostLocal}}/admin/session/detail?id=1
 Content-Type: application/json
 Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+### ssesion list
+GET {{hostLocal}}/admin/session/list?key_id=1
+Content-Type: application/json
+Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+### thread list
+GET {{hostLocal}}/admin/thread/list?offset=0&q=&limit=100
+Content-Type: application/json
+Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+### thread detail
+GET {{hostLocal}}/admin/thread/detail/9
+Content-Type: application/json
+Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+### My session
+GET {{hostLocal}}/user/session/list
+Content-Type: application/json
+Authorization: Bearer br-XRj9hvd6zsxQo3AIUqMBYqYQemKZK
+
+
+
+### My session
+GET {{hostLocal}}/user/thread/list
+Content-Type: application/json
+Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+
 
 
 
