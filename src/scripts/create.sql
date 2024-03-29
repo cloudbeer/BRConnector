@@ -7,10 +7,9 @@ CREATE TABLE IF NOT EXISTS eiai_key (
     email varchar(255) NULL,
     role varchar(64) DEFAULT 'user',
     total_fee DECIMAL(16, 10) DEFAULT 0.00,
-    balance_fee DECIMAL(16, 10) DEFAULT 0.00,
-    peorid_fee DECIMAL(16, 10) DEFAULT 0.00,
-    quota_fee DECIMAL(16, 10) DEFAULT 0.00,
-    balance_fee DECIMAL(16, 10) DEFAULT 0.00,
+    balance DECIMAL(16, 10) DEFAULT 0.00,
+    month_fee DECIMAL(16, 10) DEFAULT 0.00,
+    month_quota DECIMAL(16, 10) DEFAULT 0.00,
     created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -62,6 +61,15 @@ CREATE TABLE IF NOT EXISTS eiai_thread (
     currency char(3) NULL DEFAULT 'USD',
     invocation_latency INT DEFAULT 0,
     first_byte_latency INT DEFAULT 0,
+    created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+--balance charge history
+CREATE TABLE IF NOT EXISTS eiai_payment (
+    id serial PRIMARY KEY,
+    key_id int NOT NULL,
+    fee DECIMAL(10, 2) NOT NULL,
     created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
