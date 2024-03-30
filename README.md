@@ -149,7 +149,8 @@ Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   "name": "jack",
   "group_id": 1,
   "role": "user",
-  "email": ""
+  "email": "",
+  "month_quota": 1.00
 }
 ```
 
@@ -168,16 +169,53 @@ Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 }
 ```
 
+Update api key's info
+
+```text
+POST /admin/api-key/update
+Content-Type: application/json
+Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+{
+  "id": 2,
+  "name": "张三",
+  "month_quota": 10.00
+}
+```
+
+recharge up an  API key
+
+```text
+POST /admin/api-key/recharge
+Content-Type: application/json
+Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+{
+  "api_key": "br-xxxxxxxxxxxxxxx",
+  "balance": 0.23
+}
+```
+
+recharge history
+
+```
+GET /admin/payment/list?key_id=
+Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+```
+
 List api keys
 
 ```text
 GET /admin/api-key/list?q=cl&limit=10&offset=
+Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
 List sessions
 
 ```text
 GET /admin/session/list?q=&limit=10&offset=&key_id=
+Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
 
@@ -185,6 +223,7 @@ List threads / histories
 
 ```text
 GET /admin/thread/list?q=&limit=10&offset=&key_id=&session_id=
+Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
 
@@ -195,12 +234,14 @@ My sessions
 
 ```text
 GET /user/session/list?q=&limit=10&offset=
+Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
 My session detail
 
 ```text
 GET /user/session/detail/1
+Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
 
@@ -208,10 +249,12 @@ My threads / histories
 
 ```text
 GET /user/thread/list?q=&limit=10&offset=&session_id=
+Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
 My thread detail
 
 ```text
 GET /user/thread/detail/1
+Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```

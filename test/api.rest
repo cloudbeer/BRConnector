@@ -79,9 +79,18 @@ Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   "balance": 0.23
 }
 
-### get pay history
-GET {{hostLocal}}/admin/payment/list
+### recharge
+POST {{hostLocal}}/admin/api-key/recharge
 Content-Type: application/json
+Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+{
+  "id": 2,
+  "balance": 0.23
+}
+
+### get pay history
+GET {{hostLocal}}/admin/payment/list?key_id=
 Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 ### update api key fields
@@ -97,7 +106,6 @@ Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 ### session detail
 GET {{hostLocal}}/admin/session/detail?id=1
-Content-Type: application/json
 Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 
