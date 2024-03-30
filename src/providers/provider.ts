@@ -1,41 +1,50 @@
 import { ChatRequest } from "../entity/chat_request"
 import helper from '../util/helper';
+import api_key from "../service/key";
+// Providers
 import BedrockClaude from "./bedrock_claude";
+import AbstractProvider from "./abstract_provider";
 
 class Provider {
     constructor() {
         this["bedrock-claude3"] = new BedrockClaude();
     }
     async chat(ctx: any) {
+        const keyData = await api_key.loadById(ctx.db, ctx.user.id);
+        console.log("now-key", keyData);
+        await this.checkFee(ctx, keyData);
         const chatRequest: ChatRequest = ctx.request.body;
-        // console.log(ctx.headers);
         const session_id = ctx.headers["session-id"];
         helper.refineModelParameters(chatRequest);
-        return this[chatRequest.provider].chat(chatRequest, session_id, ctx);
+        const provider: AbstractProvider = this[chatRequest.provider];
+        provider.setkeyData(keyData);
+        return provider.chat(chatRequest, session_id, ctx);
+    }
 
+    async checkFee(ctx: any, key: any) {
+        let month_fee = parseFloat(key.month_fee);
+        const month_quota = parseFloat(key.month_quota);
+        const balance = parseFloat(key.balance);
+
+        if (month_fee > 0) {
+            // New month set it to 0
+            const lastUpdate = new Date(key.updated_at);
+            const now = new Date();
+            if (now.getMonth() != lastUpdate.getMonth() || now.getFullYear() > lastUpdate.getFullYear()) {
+                month_fee = 0;
+                await api_key.update(ctx.db, {
+                    id: ctx.user.id,
+                    month_fee: 0
+                });
+            }
+        }
+        // if (balance <=0 && )
+
+        if (month_fee >= month_quota && balance <= 0) {
+            throw new Error("Please recharge.")
+        }
     }
 }
 
 export default new Provider();
 
-// export default {
-//     "bedrock-claude3": new BedrockClaude(),
-//     chat: (ctx: any) => {
-//         const chatRequest: ChatRequest = ctx.request.body;
-//         const session_id = ctx.request.headers["SessionID"];
-//         refineModelParameters(chatRequest);
-//         return this[chatRequest.provider].chat(chatRequest, session_id, ctx);
-//     }
-// }
-
-
-
-// // export default { providers, Provider, refineModelParameters }
-
-
-// export default {
-//     "bedrock-claude3": new BedrockClaude(),
-//     get: (id) => {
-//         return this[id];
-//     }
-// }

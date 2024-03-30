@@ -28,7 +28,8 @@ Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   "name": "jack",
   "group_id": 1,
   "role": "user",
-  "email": "cloudbeer@gmail.com"
+  "email": "cloudbeer@gmail.com",
+  "month_quota": 10
 }
 
 
@@ -41,7 +42,8 @@ Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   "name": "rob",
   "group_id": 1,
   "role": "admin",
-  "email": "cloudbeer@gmail.com"
+  "email": "cloudbeer@gmail.com",
+  "month_quota": 20
 }
 
 
@@ -58,14 +60,39 @@ Authorization: Bearer br-uKUzZG3y1N9WB8qyhWCEVQ2ljHeSk
 }
 
 ### list api key
-GET {{hostLocal}}/admin/api-key/list?q=cl&limit=10&offset=
+GET {{hostLocal}}/admin/api-key/list?q=&limit=10&offset=
 Content-Type: application/json
 Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-### list api key
-GET {{hostLocal}}/admin/api-key/list?q=cl&limit=10&offset=
+### api key detail
+GET {{hostLocal}}/admin/api-key/detail/2
 Content-Type: application/json
-Authorization: Bearer br-XRj9hvd6zsxQo3AIUqMBYqYQemKZK
+Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+### recharge
+POST {{hostLocal}}/admin/api-key/recharge
+Content-Type: application/json
+Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+{
+  "api_key": "br-WP4elEV2VzZ7AGYsNEfvSrKPaQcZ6",
+  "balance": 0.23
+}
+
+### get pay history
+GET {{hostLocal}}/admin/payment/list
+Content-Type: application/json
+Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+### update api key fields
+POST {{hostLocal}}/admin/api-key/update
+Content-Type: application/json
+Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+{
+  "id": 2,
+  "month_quota": 0
+}
 
 
 ### session detail
@@ -75,7 +102,7 @@ Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 
 ### ssesion list
-GET {{hostLocal}}/admin/session/list?key_id=1
+GET {{hostLocal}}/admin/session/list?key_id=
 Content-Type: application/json
 Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
@@ -86,30 +113,16 @@ Content-Type: application/json
 Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 ### thread detail
-GET {{hostLocal}}/admin/thread/detail/9
+GET {{hostLocal}}/admin/thread/detail/8
 Content-Type: application/json
 Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
 
 ### My session
 GET {{hostLocal}}/user/session/list
 Content-Type: application/json
 Authorization: Bearer br-XRj9hvd6zsxQo3AIUqMBYqYQemKZK
 
-
-
 ### My session
 GET {{hostLocal}}/user/thread/list
 Content-Type: application/json
 Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-
-
-
-
-
-
-
-
-
-

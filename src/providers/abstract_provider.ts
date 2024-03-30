@@ -1,14 +1,15 @@
 import { ChatRequest, ResponseData } from "../entity/chat_request";
 
 export default abstract class AbstractProvider {
+    keyData: any;
     constructor() {
     }
-    // stream chat
-    abstract chat(chatRequest: ChatRequest, session_id: string, ctx: any): void;
 
-    // async save(chatRequest: ChatRequest, response: any, session_id: string, model: string) {
-    //     console.log("save...", chatRequest);
-    // };
+    setkeyData(value: any) {
+        this.keyData = value;
+    }
+
+    abstract chat(chatRequest: ChatRequest, session_id: string, ctx: any): void;
 
     // save session to db
     async saveThread(ctx: any, session_id: string, chatRequest: ChatRequest, response: ResponseData) {
@@ -18,7 +19,7 @@ export default abstract class AbstractProvider {
         }
         const session = await ctx.db.loadByKV("eiai_session", "key", session_id);
         const sessionData: any = {};
-        if (!chatRequest.stream) { // None stream is summary session title.
+        if (!chatRequest.stream) { // in BRClient, no stream means summary session's title.
             sessionData.title = response.text;
         }
         const input_tokens = response.input_tokens;
@@ -33,6 +34,7 @@ export default abstract class AbstractProvider {
 
         if (session) {
             sessionData.id = session.id;
+            sessionData.updated_at = new Date();
         } else {
             sessionData.key = session_id;
             sessionData.key_id = ctx.user.id;
@@ -65,7 +67,20 @@ export default abstract class AbstractProvider {
 
         const resThread = await ctx.db.insert("eiai_thread", threadData);
 
-        return { resSession, resThread };
+        // Update keyData fee
+        const keyDataUpdate: any = {
+            id: this.keyData.id,
+            month_fee: this.keyData.month_fee * 1.0 + fee * 1.0,
+            updated_at: new Date()
+        };
+
+        if (this.keyData.month_fee + fee >= this.keyData.month_quota) {
+            const balanceCost = this.keyData.month_fee * 1.0 + fee * 1.0 - this.keyData.month_quota * 1.0;
+            keyDataUpdate.balance = this.keyData.balance * 1.0 - balanceCost * 1.0;
+        }
+        const resApiKey = await ctx.db.update("eiai_key", keyDataUpdate);
+
+        return { resSession, resThread, resApiKey };
     }
 
 }

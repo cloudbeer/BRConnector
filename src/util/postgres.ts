@@ -113,7 +113,9 @@ export default class PGClient {
       params.push(data[keys[mIndex]]);
     }
 
-    const sql = `UPDATE ${table} SET (${keys.join(", ")}) = (${placeholders.join(", ")}) WHERE id=${data.id} RETURNING id`;
+    const sql = keys.length > 1 ?
+      `UPDATE ${table} SET (${keys.join(", ")}) = (${placeholders.join(", ")}) WHERE id=${data.id} RETURNING id` :
+      `UPDATE ${table} SET ${keys.join(", ")} = ${placeholders.join(", ")} WHERE id=${data.id} RETURNING id`;
 
     const result = await this.query(sql, params);
     return result[0];
