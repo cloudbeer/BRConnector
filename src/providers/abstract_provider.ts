@@ -71,6 +71,7 @@ export default abstract class AbstractProvider {
         const keyDataUpdate: any = {
             id: this.keyData.id,
             month_fee: this.keyData.month_fee * 1.0 + fee * 1.0,
+            total_fee: this.keyData.total_fee * 1.0 + fee * 1.0,
             updated_at: new Date()
         };
 

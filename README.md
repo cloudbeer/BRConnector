@@ -207,7 +207,7 @@ Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 List api keys
 
 ```text
-GET /admin/api-key/list?q=cl&limit=10&offset=
+GET /admin/api-key/list?q=&limit=10&offset=
 Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
