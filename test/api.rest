@@ -125,6 +125,13 @@ GET {{hostLocal}}/admin/thread/detail/8
 Content-Type: application/json
 Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
+
+### My Key Info
+GET {{hostLocal}}/user/api-key/mine
+Content-Type: application/json
+Authorization: Bearer br-WP4elEV2VzZ7AGYsNEfvSrKPaQcZ6
+
+
 ### My session
 GET {{hostLocal}}/user/session/list
 Content-Type: application/json

@@ -6,6 +6,7 @@ import admin_session_controller from './controller/admin/SessionController';
 import admin_thread_controller from './controller/admin/ThreadController';
 import user_session_controller from './controller/user/SessionController';
 import user_thread_controller from './controller/user/ThreadController';
+import user_key_controller from './controller/user/KeyController';
 // import user_thread from './controller/user/thread';
 
 export const router = new Router();
@@ -26,4 +27,5 @@ admin_thread_controller(router);
 
 // User APIs
 user_session_controller(router);
-user_thread_controller(router)
+user_thread_controller(router);
+user_key_controller(router);

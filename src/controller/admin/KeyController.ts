@@ -1,4 +1,4 @@
-import ApiKey from "../../service/key"
+import service from "../../service/key"
 import AbstractController from "../AbstractController";
 
 // Key represents API Key, and also means a user.
@@ -16,25 +16,25 @@ class KeyController extends AbstractController {
 
     async update(ctx: any) {
         const data = ctx.request.body;
-        const result = await ApiKey.update(ctx.db, data);
+        const result = await service.update(ctx.db, data);
         return super.ok(ctx, result);
     }
 
     async apply(ctx: any) {
         const body = ctx.request.body;
-        const result = await ApiKey.create(ctx.db, body);
+        const result = await service.create(ctx.db, body);
         return super.ok(ctx, result);
     }
 
     async list(ctx: any) {
         const options = ctx.query;
-        const result = await ApiKey.list(ctx.db, options);
+        const result = await service.list(ctx.db, options);
         return super.ok(ctx, result);
     }
 
     async recharge(ctx: any) {
         const body = ctx.request.body;
-        const result = await ApiKey.recharge(ctx.db, body);
+        const result = await service.recharge(ctx.db, body);
         return super.ok(ctx, result);
     }
 }
