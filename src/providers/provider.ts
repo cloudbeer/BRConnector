@@ -12,7 +12,9 @@ class Provider {
     async chat(ctx: any) {
         const keyData = await api_key.loadById(ctx.db, ctx.user.id);
         console.log("now-key", keyData);
-        await this.checkFee(ctx, keyData);
+        if (ctx.user && ctx.user.id > 0) {
+            await this.checkFee(ctx, keyData);
+        }
         const chatRequest: ChatRequest = ctx.request.body;
         const session_id = ctx.headers["session-id"];
         helper.refineModelParameters(chatRequest);
