@@ -2,8 +2,8 @@ import { ChatRequest } from "../entity/chat_request"
 import helper from '../util/helper';
 import api_key from "../service/key";
 // Providers
-import BedrockClaude from "./bedrock_claude";
 import AbstractProvider from "./abstract_provider";
+import BedrockClaude from "./bedrock_claude";
 
 class Provider {
     constructor() {
@@ -12,10 +12,15 @@ class Provider {
     async chat(ctx: any) {
         const keyData = await api_key.loadById(ctx.db, ctx.user.id);
         console.log("now-key", keyData);
-        await this.checkFee(ctx, keyData);
+
+        // 如果没有启用数据库和 api key 则不验证。
+        if (keyData) {
+            await this.checkFee(ctx, keyData);
+        }
         const chatRequest: ChatRequest = ctx.request.body;
         const session_id = ctx.headers["session-id"];
         helper.refineModelParameters(chatRequest);
+        console.log(chatRequest);
         const provider: AbstractProvider = this[chatRequest.provider];
         provider.setkeyData(keyData);
         return provider.chat(chatRequest, session_id, ctx);

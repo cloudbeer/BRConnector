@@ -13,7 +13,8 @@ export default abstract class AbstractProvider {
 
     // save session to db
     async saveThread(ctx: any, session_id: string, chatRequest: ChatRequest, response: ResponseData) {
-        // console.log(session_id, chatRequest);
+
+        // 如果没有配置数据库，或者不是会话模式，暂时未存盘
         if (!ctx.db || !session_id) {
             return null;
         }

@@ -47,6 +47,12 @@ const authHandler = async (ctx: any, next: any) => {
             throw new Error("Unauthorized: you are not a member.")
         }
     }
+
+    // if (pathName.indexOf("/v1") >= 0) {
+    //     if (!ctx.user || ctx.user.id == 0) {
+    //         throw new Error("Please use a valid api-key")
+    //     }
+    // }
     await next();
 
 };

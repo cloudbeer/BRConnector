@@ -245,23 +245,22 @@ export default class BedrockClaude extends AbstractProvider {
             await this.saveThread(ctx, session_id, chatRequest, response);
 
 
-            return responseBody;
-            //res.choices?.at(0)?.message?.content ?? "";
-            // const choices = responseBody.content.map((c: any) => {
-            //     return {
-            //         message: {
-            //             content: c.text,
-            //             role: "assistant"
-            //         }
-            //     }
-            // });
-            // return {
-            //     choices, usage: {
-            //         completion_tokens: responseBody.usage.output_tokens,
-            //         prompt_tokens: responseBody.usage.input_tokens,
-            //         total_tokens: responseBody.usage.input_tokens + responseBody.usage.output_tokens,
-            //     }
-            // };
+            // return responseBody;
+            const choices = responseBody.content.map((c: any) => {
+                return {
+                    message: {
+                        content: c.text,
+                        role: "assistant"
+                    }
+                }
+            });
+            return {
+                choices, usage: {
+                    completion_tokens: responseBody.usage.output_tokens,
+                    prompt_tokens: responseBody.usage.input_tokens,
+                    total_tokens: responseBody.usage.input_tokens + responseBody.usage.output_tokens,
+                }
+            };
         } catch (e: any) {
             return WebResponse.error(e.message);
         }

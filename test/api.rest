@@ -3,7 +3,7 @@
 ### /v1/chat/completions
 POST {{hostLocal}}/v1/chat/completions
 Content-Type: application/json
-Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Authorization: Bearer br-WP4elEV2VzZ7AGYsNEfvSrKPaQcZ6
 
 {
   "model": "claude-3-sonnet",
@@ -36,7 +36,7 @@ Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ### add an admin
 POST {{hostLocal}}/admin/api-key/apply
 Content-Type: application/json
-Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Authorization: Bearer br-WP4elEV2VzZ7AGYsNEfvSrKPaQcZ6
 
 {
   "name": "rob",
