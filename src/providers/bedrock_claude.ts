@@ -56,8 +56,6 @@ export default class BedrockClaude extends AbstractProvider {
         const messages = chatRequest.messages;
         const lastMessage = messages.pop();
 
-        // console.log(lastMessage, isBedrockSchema, lastMessage?.content?.type);
-
         const systemMessages = messages.filter(message => message.role === 'system');
         const userMessages = messages.filter(message => message.role === 'user');
         const assistantMessages = messages.filter(message => message.role === 'assistant');
@@ -70,8 +68,6 @@ export default class BedrockClaude extends AbstractProvider {
                 async message => await this.convertContent(message.content)
             )
         );
-        // console.log("UUUUU", JSON.stringify(await userPrompts, null, 2))
-
         const assistantPrompts = Promise.all(
             assistantMessages.map(
                 async message => await this.convertContent(message.content)
@@ -124,12 +120,6 @@ export default class BedrockClaude extends AbstractProvider {
             body.system = JSON.stringify(payload.systemPrompt);
         }
 
-        // if (1 == 1) throw Error();
-        // console.log(body);
-
-        // console.log(JSON.stringify(body, null, 2));
-
-
         const input = {
             body: JSON.stringify(body),
             contentType: "application/json",
@@ -169,7 +159,7 @@ export default class BedrockClaude extends AbstractProvider {
                             item.chunk.bytes,
                         );
                         const responseBody = JSON.parse(decodedResponseBody);
-                        // console.log(responseBody);
+
                         if (responseBody.delta?.type === "text_delta") {
                             i++;
                             responseText += responseBody.delta.text;

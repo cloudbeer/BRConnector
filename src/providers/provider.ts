@@ -11,8 +11,6 @@ class Provider {
     }
     async chat(ctx: any) {
         const keyData = await api_key.loadById(ctx.db, ctx.user.id);
-        console.log("now-key", keyData);
-
         // 如果没有启用数据库和 api key 则不验证。
         if (keyData) {
             await this.checkFee(ctx, keyData);
@@ -20,7 +18,6 @@ class Provider {
         const chatRequest: ChatRequest = ctx.request.body;
         const session_id = ctx.headers["session-id"];
         helper.refineModelParameters(chatRequest);
-        console.log(chatRequest);
         const provider: AbstractProvider = this[chatRequest.provider];
         provider.setkeyData(keyData);
         return provider.chat(chatRequest, session_id, ctx);

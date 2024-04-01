@@ -91,7 +91,6 @@ export default class PGClient {
 
     const result = await this.query(sql, params);
     return result[0];
-    // console.log(result[0]);
   }
 
   public async update(table: string, data: any): Promise<any> {

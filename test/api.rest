@@ -141,3 +141,10 @@ Authorization: Bearer br-XRj9hvd6zsxQo3AIUqMBYqYQemKZK
 GET {{hostLocal}}/user/thread/list
 Content-Type: application/json
 Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+### 
+
+GET http://34.223.23.146:8866/user/thread/detail/2
+Content-Type: application/json
+Authorization: Bearer br-k8P2Savqql5XpcuKRZqoxAxvLNbDL
