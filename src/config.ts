@@ -6,6 +6,7 @@ export default {
         user: process.env.PGSQL_USER,
         password: process.env.PGSQL_PASSWORD,
         debugMode: process.env.PGSQL_DEBUG_MODE || false, // set PGSQL_DEBUG_MODE=<empty> to disable
+        max: process.env.PGSQL_MAX || 80
     },
     bedrock: {
         //env ENV AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_DEFAULT_REGION 

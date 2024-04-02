@@ -20,7 +20,6 @@ export default class PGClient {
         connectionTimeoutMillis: config.connectionTimeoutMillis || 2000,
       });
       pGClient.debug = config.debugMode;
-      await client.connect();
       pGClient.pool = client;
       return pGClient;
     } catch (err: any) {
@@ -40,6 +39,7 @@ export default class PGClient {
       console.log("----------------------------------------");
     }
     const result = await this.pool.query(sql, params);
+
     return result.rows;
   }
 

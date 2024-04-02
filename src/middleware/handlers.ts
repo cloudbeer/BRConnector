@@ -5,7 +5,6 @@ import DB from '../util/postgres';
 const authHandler = async (ctx: any, next: any) => {
 
     const pathName = ctx.path;
-    console.log("access: ", pathName);
     if (pathName == "/") {
         ctx.body = "ok"; // For health check.
         return;
@@ -18,6 +17,7 @@ const authHandler = async (ctx: any, next: any) => {
     const authorization = ctx.header.authorization || "";
     const api_key = authorization.length > 20 ? authorization.substring(7) : null;
     if (!api_key) {
+        console.log("access: ", pathName);
         throw new Error("Unauthorized: api key required");
     }
     if (api_key === config.admin_api_key) {
@@ -32,6 +32,7 @@ const authHandler = async (ctx: any, next: any) => {
         const key = await ctx.db.loadByKV("eiai_key", "api_key", api_key);
 
         if (!key) {
+            console.log("access: ", pathName);
             throw new Error("Unauthorized: api key error");
         }
         ctx.user = {
@@ -48,21 +49,17 @@ const authHandler = async (ctx: any, next: any) => {
 
     if (pathName.indexOf("/admin") >= 0) {
         if (!ctx.user || ctx.user.role !== "admin") {
+            console.log("access: ", pathName);
             throw new Error("Unauthorized: you are not an admin role.")
         }
     }
 
     if (pathName.indexOf("/user") >= 0) {
         if (!ctx.user) {
+            console.log("access: ", pathName);
             throw new Error("Unauthorized: you are not a member.")
         }
     }
-
-    // if (pathName.indexOf("/v1") >= 0) {
-    //     if (!ctx.user || ctx.user.id == 0) {
-    //         throw new Error("Please use a valid api-key")
-    //     }
-    // }
     await next();
 
 };
