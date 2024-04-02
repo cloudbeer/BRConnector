@@ -3,6 +3,18 @@ import config from '../config';
 import DB from '../util/postgres';
 
 const authHandler = async (ctx: any, next: any) => {
+
+    const pathName = ctx.path;
+    console.log("access: ", pathName);
+    if (pathName == "/") {
+        ctx.body = "ok"; // For health check.
+        return;
+    }
+    if (pathName == "/favicon.ico") {
+        ctx.body = "ok";
+        return;
+    }
+
     const authorization = ctx.header.authorization || "";
     const api_key = authorization.length > 20 ? authorization.substring(7) : null;
     if (!api_key) {
@@ -34,8 +46,6 @@ const authHandler = async (ctx: any, next: any) => {
         ctx.user = null;
     }
 
-    const pathName = ctx.path;
-    console.log("access: ", pathName);
     if (pathName.indexOf("/admin") >= 0) {
         if (!ctx.user || ctx.user.role !== "admin") {
             throw new Error("Unauthorized: you are not an admin role.")
