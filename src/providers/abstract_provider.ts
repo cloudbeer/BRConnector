@@ -68,17 +68,22 @@ export default abstract class AbstractProvider {
 
         const resThread = await ctx.db.insert("eiai_thread", threadData);
 
+        const month_fee = this.keyData.month_fee * 1.0;
+        const month_quota = this.keyData.month_quota * 1.0;
+        const balance = this.keyData.balance * 1.0;
         // Update keyData fee
         const keyDataUpdate: any = {
             id: this.keyData.id,
-            month_fee: this.keyData.month_fee * 1.0 + fee * 1.0,
-            total_fee: this.keyData.total_fee * 1.0 + fee * 1.0,
+            total_fee: this.keyData.total_fee * 1.0 + fee,
             updated_at: new Date()
         };
 
-        if (this.keyData.month_fee + fee >= this.keyData.month_quota) {
-            const balanceCost = this.keyData.month_fee * 1.0 + fee * 1.0 - this.keyData.month_quota * 1.0;
-            keyDataUpdate.balance = this.keyData.balance * 1.0 - balanceCost * 1.0;
+        if (month_fee + fee >= month_quota) { // The balance will be consumed
+            const balanceCost = month_fee + fee - month_quota;
+            keyDataUpdate.balance = balance - balanceCost;
+            keyDataUpdate.month_fee = (month_fee > month_quota ? month_quota : month_fee); // Month quota may be modified in the middle of the process
+        } else {
+            keyDataUpdate.month_fee = month_fee + fee; // Balance spending does not count as month_fee  
         }
         const resApiKey = await ctx.db.update("eiai_key", keyDataUpdate);
 
