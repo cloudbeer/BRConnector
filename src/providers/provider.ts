@@ -40,8 +40,6 @@ class Provider {
                 });
             }
         }
-        // if (balance <=0 && )
-
         if (month_fee >= month_quota && balance <= 0) {
             throw new Error("Please recharge.")
         }

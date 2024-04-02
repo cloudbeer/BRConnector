@@ -100,7 +100,7 @@ Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 {
   "id": 2,
-  "month_quota": 0
+  "month_quota": 10
 }
 
 
