@@ -6,6 +6,8 @@ COPY ./dist/server .
 
 COPY ./src/scripts/create.sql ./src/scripts/create.sql
 
+COPY ./package.json .
+
 RUN npm install --omit=dev
 
 EXPOSE 8866
