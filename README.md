@@ -7,9 +7,10 @@ English / [简体中文](./README_CN.md)
 
 </div>
 
-BRProxy is a bedrock API forwarding tool that can issue virtual keys, log chats, and manage costs. 
+BRProxy 是一个 AWS Bedrock 的 API 转发工具, 可以发布虚拟密钥、记录聊天记录并进行费用控制等。
 
-It is compatible with [BRClient](https://github.com/DamonDeng/BRClient) and any other OPENAI client that can define Host and API Key.
+它与  [BRClient](https://github.com/DamonDeng/BRClient) 以及任何其他可以定义 Host 和 API Key 的 OPENAI 客户端工具兼容。
+
 
 ## Dev Mode
 
@@ -111,10 +112,8 @@ docker run --name brproxy \
  -e PGSQL_USER=postgres \
  -e PGSQL_PASSWORD=mysecretpassword \
  -e ADMIN_API_KEY=br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx \
- -d cloudbeer/brproxy:0.0.3
+ -d cloudbeer/brproxy:0.0.6
 ```
-
-
 
 
 ## API Specification
@@ -262,3 +261,14 @@ My thread detail
 GET /user/thread/detail/1
 Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
+
+## Disclaimer
+
+
+BRProxy is an open-source software aimed at providing proxy services for using Bedrock Claude. We make our best efforts to ensure the security and legality of the software, but we are not responsible for the users' behavior.
+
+BRProxy is intended solely for personal learning and research purposes. Users shall not use BRProxy for any illegal activities, including but not limited to hacking, spreading illegal information, etc. Otherwise, users shall bear the corresponding legal responsibilities themselves. Users are responsible for complying with the laws and regulations in their respective jurisdictions and shall not use BRProxy for any illegal or non-compliant purposes. The developers and maintainers of this software shall not be liable for any disputes, losses, or legal liabilities arising from the use of BRProxy.
+
+We reserve the right to modify or terminate the BRProxy service at any time without further notice. Users are expected to understand and comply with the relevant local laws and regulations.
+
+If you have any questions regarding this disclaimer, please feel free to contact us through the open-source channels.
