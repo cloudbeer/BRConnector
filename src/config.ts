@@ -14,6 +14,7 @@ export default {
         aws_secret_key: process.env.AWS_SECRET_ACCESS_KEY,
         region: process.env.AWS_DEFAULT_REGION || "us-east-1"
     },
-    admin_api_key: process.env.ADMIN_API_KEY
+    admin_api_key: process.env.ADMIN_API_KEY,
+    debugMode: process.env.DEBUG_MODE || false, // set DEBUG_MODE=<empty> to disable
 
 }

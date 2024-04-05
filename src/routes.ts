@@ -13,6 +13,7 @@ export const router = new Router();
 
 // AI API
 router.post("/v1/chat/completions", chat.completions);
+router.get("/v1/models", chat.models);
 
 // Admin APIs
 admin_key_controller(router);
