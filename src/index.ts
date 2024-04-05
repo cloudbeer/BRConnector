@@ -4,7 +4,7 @@ dotenv.config();
 import Koa from "koa";
 import { bodyParser } from "@koa/bodyparser"
 import cors from "@koa/cors"
-import { authHandler, errorHandler, databaseHandler } from './middleware/handlers'
+import { authHandler, errorHandler, databaseHandler, loggerHandler } from './middleware/handlers'
 import { router } from "./routes";
 
 
@@ -14,6 +14,7 @@ install();
 
 
 const app = new Koa();
+app.use(loggerHandler);
 
 app.use(errorHandler);
 

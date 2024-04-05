@@ -26,12 +26,16 @@ export default class BedrockClaude extends AbstractProvider {
                 text: content
             }];
         }
+        const rtn = [];
         if (Array.isArray(content)) {
-            return Promise.all(content.map(async item => {
-                return await this.convertSingleType(item);
-            }));
+            for (const item of content) {
+                rtn.push(await this.convertSingleType(item));
+            }
+            // return Promise.all(content.map(async item => {
+            //     return await this.convertSingleType(item);
+            // }));
         }
-        return [];
+        return rtn;
     }
 
     async convertSingleType(contentItem: any) {
@@ -48,57 +52,57 @@ export default class BedrockClaude extends AbstractProvider {
                 text: contentItem.text
             }
         }
+
         return contentItem;
     }
 
     //TODO: Change playload, I need more information.
     async convertMessagePayload(chatRequest: ChatRequest): Promise<any> {
+
         const messages = chatRequest.messages;
-        const lastMessage = messages.pop();
 
         const systemMessages = messages.filter(message => message.role === 'system');
         const userMessages = messages.filter(message => message.role === 'user');
         const assistantMessages = messages.filter(message => message.role === 'assistant');
 
+
         const systemPrompt = systemMessages.reduce((acc, message) => {
             return acc + message.content;
         }, "");
-        const userPrompts = Promise.all(
-            userMessages.map(
-                async message => await this.convertContent(message.content)
-            )
-        );
-        const assistantPrompts = Promise.all(
-            assistantMessages.map(
-                async message => await this.convertContent(message.content)
-            )
-        );
 
+
+        let userPrompts = [];
+        let assistantPrompts = [];
+        for (const message of userMessages) {
+            userPrompts = userPrompts.concat(await this.convertContent(message.content));
+        }
+        for (const message of assistantMessages) {
+            assistantPrompts = assistantPrompts.concat(await this.convertContent(message.content));
+        }
         const new_messages: any = [];
 
         if (assistantMessages.length == 0) {
-            const content = await this.convertContent(lastMessage?.content)
             new_messages.push({
                 role: "user",
-                content
+                content: userPrompts
             });
+
         } else {
+            const lastPrompt = userPrompts.pop();
             new_messages.push({
                 role: "user",
-                content: (await userPrompts)[0]
+                content: userPrompts
             });
             new_messages.push({
                 role: "assistant",
-                content: (await assistantPrompts)[0]
+                content: assistantPrompts
             });
-            const content = await this.convertContent(lastMessage?.content)
+
             new_messages.push({
                 role: "user",
-                content
+                content: [lastPrompt]
             });
         }
-
-        messages.push(lastMessage); // restore origin request.
 
         return { messages: new_messages, systemPrompt }
 
@@ -114,11 +118,12 @@ export default class BedrockClaude extends AbstractProvider {
             "temperature": chatRequest.temperature || 1.0,
             "top_p": chatRequest.top_p || 1,
             "top_k": chatRequest["top_k"] || 50
-            // system: payload.system,
         };
         if (payload.systemPrompt && payload.systemPrompt.length > 0) {
             body.system = JSON.stringify(payload.systemPrompt);
         }
+
+        // ctx.logger.debug(body);
 
         const input = {
             body: JSON.stringify(body),

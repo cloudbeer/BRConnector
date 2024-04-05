@@ -20,7 +20,11 @@ class Provider {
         helper.refineModelParameters(chatRequest);
         const provider: AbstractProvider = this[chatRequest.provider];
         provider.setkeyData(keyData);
-        return provider.chat(chatRequest, session_id, ctx);
+        try {
+            return provider.chat(chatRequest, session_id, ctx);
+        } catch (ex: any) {
+            throw new Error(ex.message);
+        }
     }
 
     async checkFee(ctx: any, key: any) {

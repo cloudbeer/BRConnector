@@ -82,7 +82,7 @@ export default {
             email: options.email,
             month_quota: options.month_quota || 0,
             balance: options.balance || 0,
-        });
+        }, ["id", "name", "email", "api_key", "role", "month_quota", "balance"]);
 
     },
 
@@ -98,7 +98,7 @@ export default {
         data.name && (updateData.name = data.name);
         data.month_quota != undefined && (updateData.month_quota = data.month_quota);
         updateData.updated_at = new Date()
-        return await db.update("eiai_key", updateData);
+        return await db.update("eiai_key", updateData, ["id", "name", "email", "api_key", "role", "month_quota", "balance"]);
     },
 
     recharge: async (db: any, options: any) => {
@@ -127,7 +127,7 @@ export default {
             id: key.id,
             balance: 1.0 * key.balance + 1.0 * options.balance,
             updated_at: new Date()
-        });
+        }, ["id", "name", "email", "api_key", "role", "month_quota", "balance"]);
     }
 
 }

@@ -1,10 +1,16 @@
 import response from '../util/response';
 import config from '../config';
 import DB from '../util/postgres';
+import { createLogger, format, transports } from 'winston';
+// const = require('winston');
+
 
 const authHandler = async (ctx: any, next: any) => {
 
     const pathName = ctx.path;
+    if (config.debugMode) {
+        ctx.logger.debug(pathName);
+    }
     if (pathName == "/") {
         ctx.body = "ok"; // For health check.
         return;
@@ -17,7 +23,7 @@ const authHandler = async (ctx: any, next: any) => {
     const authorization = ctx.header.authorization || "";
     const api_key = authorization.length > 20 ? authorization.substring(7) : null;
     if (!api_key) {
-        console.log("access: ", pathName);
+        ctx.logger.error("access: ", pathName);
         throw new Error("Unauthorized: api key required");
     }
     if (api_key === config.admin_api_key) {
@@ -32,7 +38,7 @@ const authHandler = async (ctx: any, next: any) => {
         const key = await ctx.db.loadByKV("eiai_key", "api_key", api_key);
 
         if (!key) {
-            console.log("access: ", pathName);
+            ctx.logger.error("access: ", pathName);
             throw new Error("Unauthorized: api key error");
         }
         ctx.user = {
@@ -43,20 +49,20 @@ const authHandler = async (ctx: any, next: any) => {
         };
     } else {
         // Anonymous access...
-        console.log("Fake api key, anonymous access...");
+        ctx.logger.info("Fake api key, anonymous access...");
         ctx.user = null;
     }
 
     if (pathName.indexOf("/admin") >= 0) {
         if (!ctx.user || ctx.user.role !== "admin") {
-            console.log("access: ", pathName);
+            ctx.logger.error(pathName);
             throw new Error("Unauthorized: you are not an admin role.")
         }
     }
 
     if (pathName.indexOf("/user") >= 0) {
         if (!ctx.user) {
-            console.log("access: ", pathName);
+            ctx.logger.error(pathName);
             throw new Error("Unauthorized: you are not a member.")
         }
     }
@@ -81,5 +87,32 @@ const databaseHandler = async (ctx: any, next: any) => {
     await next();
 };
 
+const loggerHandler = async (ctx: any, next: any) => {
+    const logger = createLogger({
+        level: 'info',
+        format: format.combine(
+            format.timestamp(),
+            format.splat(),
+            format.prettyPrint()
+        ),
+        defaultMeta: { service: 'brproxy' },
+        transports: [
+            new transports.File({ filename: 'error.log', level: 'error' }),
+            new transports.File({ filename: 'combined.log' }),
+        ],
+    });
 
-export { errorHandler, authHandler, databaseHandler };
+    if (config.debugMode) {
+        logger.level = 'silly';
+        logger.add(new transports.Console({
+            format: format.splat(),
+        }));
+        logger.add(new transports.Console({
+            format: format.simple(),
+        }));
+    }
+    ctx.logger = logger;
+    await next();
+}
+
+export { errorHandler, authHandler, databaseHandler, loggerHandler };

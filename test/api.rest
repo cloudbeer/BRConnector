@@ -25,7 +25,7 @@ Content-Type: application/json
 Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 {
-  "name": "jack",
+  "name": "jack1111",
   "group_id": 1,
   "role": "user",
   "email": "cloudbeer@gmail.com",
@@ -53,7 +53,7 @@ Content-Type: application/json
 Authorization: Bearer br-uKUzZG3y1N9WB8qyhWCEVQ2ljHeSk
 
 {
-  "name": "rob2",
+  "name": "rob10",
   "group_id": 1,
   "role": "user",
   "email": ""
@@ -69,14 +69,25 @@ GET {{hostLocal}}/admin/api-key/detail/2
 Content-Type: application/json
 Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-### recharge
+### recharge by api key
 POST {{hostLocal}}/admin/api-key/recharge
 Content-Type: application/json
 Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 {
   "api_key": "br-WP4elEV2VzZ7AGYsNEfvSrKPaQcZ6",
-  "balance": 0.23
+  "balance": 1
+}
+
+
+### recharge by id
+POST {{hostLocal}}/admin/api-key/recharge
+Content-Type: application/json
+Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+{
+  "id": 2,
+  "balance": 1
 }
 
 ### recharge

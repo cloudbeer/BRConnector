@@ -18,7 +18,8 @@
     "dotenv": "^16.4.5",
     "koa": "^2.15.1",
     "koa-router": "^12.0.1",
-    "pg": "^8.11.3"
+    "pg": "^8.11.3",
+    "winston": "^3.13.0"
   },
   "compilerOptions": {
     "module": "NodeNext",

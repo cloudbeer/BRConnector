@@ -15,13 +15,8 @@ export default abstract class AbstractProvider {
     async saveThread(ctx: any, session_id: string, chatRequest: ChatRequest, response: ResponseData) {
 
         // 如果没有配置数据库，或者不是会话模式，暂时未存盘
-        if (!ctx.db || !session_id) {
+        if (!ctx.db) {
             return null;
-        }
-        const session = await ctx.db.loadByKV("eiai_session", "key", session_id);
-        const sessionData: any = {};
-        if (!chatRequest.stream) { // in BRClient, no stream means summary session's title.
-            sessionData.title = response.text;
         }
         const input_tokens = response.input_tokens;
         const output_tokens = response.output_tokens;
@@ -29,19 +24,28 @@ export default abstract class AbstractProvider {
         const fee_out = output_tokens * chatRequest.price_out;
         const fee: number = fee_in + fee_out;
 
-        sessionData.total_in_tokens = session ? session.total_in_tokens + input_tokens : input_tokens;
-        sessionData.total_out_tokens = session ? session.total_out_tokens + output_tokens : output_tokens;
-        sessionData.total_fee = session ? fee * 1.0 + session.total_fee * 1.0 : fee;
+        let dbSessionId = 0;
+        if (session_id) {
+            const session = await ctx.db.loadByKV("eiai_session", "key", session_id);
+            const sessionData: any = {};
+            if (!chatRequest.stream) { // in BRClient, no stream means summary session's title.
+                sessionData.title = response.text;
+            }
 
-        if (session) {
-            sessionData.id = session.id;
-            sessionData.updated_at = new Date();
-        } else {
-            sessionData.key = session_id;
-            sessionData.key_id = ctx.user.id;
+            sessionData.total_in_tokens = session ? session.total_in_tokens + input_tokens : input_tokens;
+            sessionData.total_out_tokens = session ? session.total_out_tokens + output_tokens : output_tokens;
+            sessionData.total_fee = session ? fee * 1.0 + session.total_fee * 1.0 : fee;
+
+            if (session) {
+                sessionData.id = session.id;
+                sessionData.updated_at = new Date();
+            } else {
+                sessionData.key = session_id;
+                sessionData.key_id = ctx.user.id;
+            }
+            const resSession = await ctx.db.save("eiai_session", sessionData);
+            dbSessionId = resSession.id;
         }
-
-        const resSession = await ctx.db.save("eiai_session", sessionData);
 
         const messages = chatRequest.messages;
 
@@ -62,11 +66,11 @@ export default abstract class AbstractProvider {
             currency: chatRequest.currency,
             invocation_latency: response.invocation_latency,
             first_byte_latency: response.first_byte_latency,
-            session_id: resSession.id
+            session_id: dbSessionId
         }
         threadData.thread_type = chatRequest.stream ? 0 : 1;
 
-        const resThread = await ctx.db.insert("eiai_thread", threadData);
+        await ctx.db.insert("eiai_thread", threadData);
 
         const month_fee = this.keyData.month_fee * 1.0;
         const month_quota = this.keyData.month_quota * 1.0;
@@ -85,9 +89,13 @@ export default abstract class AbstractProvider {
         } else {
             keyDataUpdate.month_fee = month_fee + fee; // Balance spending does not count as month_fee  
         }
-        const resApiKey = await ctx.db.update("eiai_key", keyDataUpdate);
+        await ctx.db.update("eiai_key", keyDataUpdate);
 
-        return { resSession, resThread, resApiKey };
+        return {
+            session_updated: session_id ? true : false,
+            thread_updated: true,
+            key_updated: true
+        };
     }
 
 }

@@ -75,8 +75,10 @@ export default class PGClient {
     return this.loadByKV(table, "id", id);
   }
 
-  public async insert(table: string, data: any): Promise<any> {
+  public async insert(table: string, data: any, returning?: string[]): Promise<any> {
     const keys = Object.keys(data);
+
+    returning = returning || ["id"];
 
     let placeholders = [];
     let params = [];
@@ -87,17 +89,18 @@ export default class PGClient {
       params.push(data[keys[mIndex]]);
     }
 
-    const sql = `INSERT into ${table} (${keys.join(", ")}) values (${placeholders.join(", ")}) RETURNING id`;
+    const sql = `INSERT into ${table} (${keys.join(", ")}) values (${placeholders.join(", ")}) RETURNING ${returning.join(",")}`;
 
     const result = await this.query(sql, params);
     return result[0];
   }
 
-  public async update(table: string, data: any): Promise<any> {
+  public async update(table: string, data: any, returning?: string[]): Promise<any> {
     if (!data.id) {
       throw new Error("The updated data must include the id.");
     }
 
+    returning = returning || ["id"];
     const keys = Object.keys(data);
     const idIndex = keys.indexOf("id");
     // delete keys[idIndex];
@@ -113,19 +116,19 @@ export default class PGClient {
     }
 
     const sql = keys.length > 1 ?
-      `UPDATE ${table} SET (${keys.join(", ")}) = (${placeholders.join(", ")}) WHERE id=${data.id} RETURNING id` :
-      `UPDATE ${table} SET ${keys.join(", ")} = ${placeholders.join(", ")} WHERE id=${data.id} RETURNING id`;
+      `UPDATE ${table} SET (${keys.join(", ")}) = (${placeholders.join(", ")}) WHERE id=${data.id} RETURNING ${returning.join(",")}` :
+      `UPDATE ${table} SET ${keys.join(", ")} = ${placeholders.join(", ")} WHERE id=${data.id} RETURNING ${returning.join(",")}`;
 
     const result = await this.query(sql, params);
     return result[0];
 
   }
 
-  public save(table: string, data: any): Promise<any> {
+  public save(table: string, data: any, returning?: string[]): Promise<any> {
     if (data.id) {
-      return this.update(table, data);
+      return this.update(table, data, returning);
     } else {
-      return this.insert(table, data);
+      return this.insert(table, data, returning);
     }
   }
 
