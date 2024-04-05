@@ -7,6 +7,10 @@ English / [简体中文](./README_CN.md)
 
 </div>
 
+BRProxy is a bedrock API forwarding tool that can issue virtual keys, log chats, and manage costs. 
+
+It is compatible with [BRClient](https://github.com/DamonDeng/BRClient) and any other OPENAI client that can define Host and API Key.
+
 ## Dev Mode
 
 ### Run postgres locally:
