@@ -8,6 +8,10 @@
 
 </div>
 
+BRProxy is a bedrock API forwarding tool that can issue virtual keys, log chats, and manage costs. 
+
+BRProxy 可以玉 [BRClient](https://github.com/DamonDeng/BRClient) 很好配合，and any other OPENAI client that can define Host and API Key.
+
 
 ## 开发模式
 
@@ -111,7 +115,7 @@ docker run --name brproxy \
  -e PGSQL_USER=postgres \
  -e PGSQL_PASSWORD=mysecretpassword \
  -e ADMIN_API_KEY=br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx \
- -d cloudbeer/brproxy:0.0.3
+ -d cloudbeer/brproxy:0.0.6
 ```
 
 可以到 [docker hub](https://hub.docker.com/r/cloudbeer/brproxy/tags) 上看看有没有更新的镜像。
@@ -260,3 +264,13 @@ Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 GET /user/thread/detail/1
 Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
+
+## 免责声明
+
+BRProxy是一款开源软件,旨在为使用 Bedrock Claude 提供代理服务。我们尽最大努力确保软件的安全性和合法性,但不对使用者的行为负责。
+
+BRProxy仅供个人学习和研究使用。用户不得将BRProxy用于任何非法活动,包括但不限于黑客攻击、传播违法信息等,否则将自行承担相应的法律责任。使用者有责任遵守所在地区的法律法规,不得将 BRProxy 用于任何非法或违规的目的。如因使用BRProxy而产生的任何纠纷、损失或法律责任,本软件的开发者和维护者概不负责。
+
+我们保留随时修改或终止BRProxy服务的权利,恕不另行通知。请用户理解并遵守当地的相关法律法规。
+
+如果您对免责声明有任何疑问,欢迎通过开源渠道与我们联系。
