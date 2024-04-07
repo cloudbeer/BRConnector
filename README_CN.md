@@ -8,9 +8,9 @@
 
 </div>
 
-BRProxy is a bedrock API forwarding tool that can issue virtual keys, log chats, and manage costs. 
+BRProxy 是一个 AWS Bedrock 的 API 转发工具, 可以发布虚拟密钥、记录聊天记录并进行费用控制等。
 
-BRProxy 可以玉 [BRClient](https://github.com/DamonDeng/BRClient) 很好配合，and any other OPENAI client that can define Host and API Key.
+它与  [BRClient](https://github.com/DamonDeng/BRClient) 以及任何其他可以定义 Host 和 API Key 的 OPENAI 客户端工具兼容。
 
 
 ## 开发模式
