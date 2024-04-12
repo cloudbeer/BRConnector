@@ -85,7 +85,8 @@ export default abstract class AbstractProvider {
         if (month_fee + fee >= month_quota) { // The balance will be consumed
             const balanceCost = month_fee + fee - month_quota;
             keyDataUpdate.balance = balance - balanceCost;
-            keyDataUpdate.month_fee = (month_fee > month_quota ? month_quota : month_fee); // Month quota may be modified in the middle of the process
+            // keyDataUpdate.month_fee = (month_fee > month_quota ? month_quota : month_fee); // Month quota may be modified in the middle of the process
+            keyDataUpdate.month_fee = month_quota;
         } else {
             keyDataUpdate.month_fee = month_fee + fee; // Balance spending does not count as month_fee  
         }
