@@ -74,7 +74,8 @@ const errorHandler = async (ctx: any, next: any) => {
     try {
         await next();
     } catch (ex: any) {
-        console.error(ex);
+        ctx.logger.error(ctx.path);
+        ctx.logger.error(ex.message);
         ctx.body = response.error(ex.message);
     }
 };
