@@ -64,6 +64,11 @@ GET {{hostLocal}}/admin/api-key/list?q=&limit=10&offset=
 Content-Type: application/json
 Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
+### stat
+GET {{hostLocal}}/admin/statistics/total
+Content-Type: application/json
+Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
 ### api key detail
 GET {{hostLocal}}/admin/api-key/detail/2
 Content-Type: application/json
@@ -140,7 +145,7 @@ Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ### My Key Info
 GET {{hostLocal}}/user/api-key/mine
 Content-Type: application/json
-Authorization: Bearer br-WP4elEV2VzZ7AGYsNEfvSrKPaQcZ6
+Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 
 ### My session

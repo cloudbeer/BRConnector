@@ -12,13 +12,12 @@ export default {
         if (!id) {
             throw new Error("id is required");
         }
+        const iId = ~~id;
+        if (iId === -1) {
+            throw new Error("Please create an admin key via the API first.");
+        }
         const api_key = await db.loadById("eiai_key", ~~id);
 
-        if (options.key_id) {
-            if (api_key.key_id != options.key_id) {
-                throw new Error("Unauthorized: not your session.");
-            }
-        }
         return api_key;
     },
     list: async (db: any, options: any) => {
