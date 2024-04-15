@@ -169,5 +169,16 @@ export default class PGClient {
 
   }
 
+  public async sum(table: string, col: string, conditions: any): Promise<number> {
+    conditions = conditions || {};
+    conditions.where = conditions.where || "1=1";
+    var sql = `select sum(${col}) as ct from ${table} where ${conditions.where} `;
+    var rows = await this.query(sql, conditions.params);
+    if (rows.length > 0) {
+      return rows[0].ct;
+    }
+    return 0;
+  }
+
 }
 

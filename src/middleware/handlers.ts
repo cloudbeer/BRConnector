@@ -28,7 +28,7 @@ const authHandler = async (ctx: any, next: any) => {
     }
     if (api_key === config.admin_api_key) {
         ctx.user = {
-            id: 0,
+            id: -1,
             api_key: config.admin_api_key,
             name: "amdin",
             role: "admin"
