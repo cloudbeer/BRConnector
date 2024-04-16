@@ -1,7 +1,7 @@
 import service from "../../service/statistics"
 import AbstractController from "../AbstractController";
 
-class ThreadController extends AbstractController {
+class StatisticsController extends AbstractController {
     public routers(router: import("koa-router") <any, {}>): void {
         router.get("/admin/statistics/total", this.total);
     }
@@ -13,4 +13,4 @@ class ThreadController extends AbstractController {
     }
 }
 
-export default (router: any) => new ThreadController(router);
+export default (router: any) => new StatisticsController(router);

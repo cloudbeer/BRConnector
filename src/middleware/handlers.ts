@@ -8,9 +8,6 @@ import { createLogger, format, transports } from 'winston';
 const authHandler = async (ctx: any, next: any) => {
 
     const pathName = ctx.path;
-    if (config.debugMode) {
-        ctx.logger.debug(pathName);
-    }
     if (pathName == "/") {
         ctx.body = "ok"; // For health check.
         return;
@@ -23,7 +20,6 @@ const authHandler = async (ctx: any, next: any) => {
     const authorization = ctx.header.authorization || "";
     const api_key = authorization.length > 20 ? authorization.substring(7) : null;
     if (!api_key) {
-        ctx.logger.error("access: ", pathName);
         throw new Error("Unauthorized: api key required");
     }
     if (api_key === config.admin_api_key) {
@@ -38,7 +34,6 @@ const authHandler = async (ctx: any, next: any) => {
         const key = await ctx.db.loadByKV("eiai_key", "api_key", api_key);
 
         if (!key) {
-            ctx.logger.error("access: ", pathName);
             throw new Error("Unauthorized: api key error");
         }
         ctx.user = {
@@ -55,14 +50,12 @@ const authHandler = async (ctx: any, next: any) => {
 
     if (pathName.indexOf("/admin") >= 0) {
         if (!ctx.user || ctx.user.role !== "admin") {
-            ctx.logger.error(pathName);
             throw new Error("Unauthorized: you are not an admin role.")
         }
     }
 
     if (pathName.indexOf("/user") >= 0) {
         if (!ctx.user) {
-            ctx.logger.error(pathName);
             throw new Error("Unauthorized: you are not a member.")
         }
     }
@@ -74,7 +67,6 @@ const errorHandler = async (ctx: any, next: any) => {
     try {
         await next();
     } catch (ex: any) {
-        ctx.logger.error(ctx.path);
         ctx.logger.error(ex.message);
         ctx.body = response.error(ex.message);
     }
@@ -89,17 +81,20 @@ const databaseHandler = async (ctx: any, next: any) => {
 };
 
 const loggerHandler = async (ctx: any, next: any) => {
+    // const myFormat = format.printf(({ level, message, label, timestamp }) => {
+    //     return `${timestamp} - ${level}: ${message}`;
+    // });
     const logger = createLogger({
         level: 'info',
         format: format.combine(
             format.timestamp(),
-            format.splat(),
-            format.prettyPrint()
+            format.prettyPrint(),
+            // myFormat
         ),
-        defaultMeta: { service: 'brproxy' },
+        defaultMeta: { service: 'brproxy', path: ctx.path },
         transports: [
-            new transports.File({ filename: 'error.log', level: 'error' }),
-            new transports.File({ filename: 'combined.log' }),
+            new transports.File({ filename: './logs/error.log', level: 'error' }),
+            new transports.File({ filename: './logs/combined.log' }),
         ],
     });
 
@@ -108,9 +103,9 @@ const loggerHandler = async (ctx: any, next: any) => {
         logger.add(new transports.Console({
             format: format.splat(),
         }));
-        logger.add(new transports.Console({
-            format: format.simple(),
-        }));
+        // logger.add(new transports.Console({
+        //     format: format.simple(),
+        // }));
     }
     ctx.logger = logger;
     await next();

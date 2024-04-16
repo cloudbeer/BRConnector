@@ -164,3 +164,39 @@ Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 GET http://34.223.23.146:8866/user/thread/detail/2
 Content-Type: application/json
 Authorization: Bearer br-k8P2Savqql5XpcuKRZqoxAxvLNbDL
+
+
+### Model 
+
+### Create a kb model
+POST {{hostLocal}}/admin/model/save-kb-model
+Content-Type: application/json
+Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+{
+  "name": "bedrock-kb-02",
+  "knowledgeBaseId": "xxx",
+  "summaryModel": "claude-3-sonnet"
+}
+
+### update a kb model
+POST {{hostLocal}}/admin/model/save-kb-model
+Content-Type: application/json
+Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+{
+  "id": 1,
+  "name": "bedrock-kb-01",
+  "knowledgeBaseId": "abcdxxx11",
+  "summaryModel": "claude-3-sonnet"
+}
+
+### list a models
+GET {{hostLocal}}/admin/model/list
+Content-Type: application/json
+Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+### model detail
+GET {{hostLocal}}/admin/model/detail/2
+Content-Type: application/json
+Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
