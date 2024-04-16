@@ -96,10 +96,26 @@ This API_KEY is not designed to be used as admin user or normal user.
 Create the first user with the following command:
 
 ```shell
+curl -X POST "http://localhost:8866/admin/api-key/apply" \
+     -H "Content-Type: application/json" \
+	 -H "Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" \
+     -d '{"name": "adminuser","group_id": 1,"role": "admin","email": "", "month_quota":"20"}'
 
 ```
 
-#### 6. Configure BRClient to connect to the BRProxy server.
+You will get some response like the following:
+
+```shell
+
+{"success":true,"data":{"id":3,"name":"adminuser","email":"","api_key":"br-someotherkeyvaluexxxxx","role":"admin","month_quota":"20.0000000000","balance":"0.0000000000"}}
+
+```
+
+Record the new api_key for the new user, 
+this api_key can be used to config BRClient to chat
+and this api_key can be used to login BRProxyManager to manage other users.
+
+#### 6. Config BRClient to connect to the BRProxy server.
 
 As BRClient only support HTTPS, you need to setup a SSL offload service in front of the BRProxy server.
 
@@ -119,70 +135,125 @@ Then, open a new chat to test.
 
 If every thing goes well, you can start to chat.
 
+#### 7. Config BRProxyManager to manager the BRProxy server.
 
-### Environment .env file
+Go to BRProxyManager repo:
 
-Place it in the root directory of the project.
+[BRProxyManager](https://github.com/DamonDeng/BRProxyManager)
 
-```env
-PGSQL_HOST=127.0.0.1
-PGSQL_DATABASE=eiai_proxy
-PGSQL_USER=postgres
-PGSQL_PASSWORD=mysecretpassword
-PGSQL_DEBUG_MODE=ok
-ADMIN_API_KEY=br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-```
+Follow the instructions to launch BRProxyManager.
 
+In the login page:
+Enter the URL of your BRProxy server. 
+Use the API_Key you created in step 5 to login.
 
-### Run it:
-
-```shell
-npm run dev
-# or
-yarn dev
-```
-
-If you have configured postgres, the tables will be created automatically.
+Then you can start to create other users and manager other users with the UI.
 
 
-### Test it
+## Dev Mode
 
-- Use [BRClient](https://github.com/DamonDeng/BRClient) to test AI APIs.
+ ### Run postgres locally:
 
-- Use Postman to test it. 
+ ```shell
+ docker run --name postgres \
+   -e POSTGRES_PASSWORD=mysecretpassword \
+   -p 5432:5432 \
+   -d postgres
+ ```
 
-- Some APIs' spec will be found in `test/api.rest`
+ Create an database named `eiai_proxy`:
 
-## Prod mode
+ ```shell
+ docker exec -it postgres psql -U postgres
+ ```
+ and run
 
-Configure your environment variables.
-
-Managed RDS for postgres is recommended.
-
-```shell
-npm run build 
-
-# then
-
-node dist/server/node.js
-```
-
-or 
-
-refer to the [Dockerfile](./Dockerfile) to organize your folder and dependencies.
-
-or
-
-```shell
-yarn start
-```
+ ```sql
+ CREATE DATABASE eiai_proxy;
+ ```
 
 
-## Docker
+ ### Environment .env file
 
-Build Docker
+ Place it in the root directory of the project.
 
-Before you build docker, run  `npm run build` first.
+ ```env
+ PGSQL_HOST=127.0.0.1
+ PGSQL_DATABASE=eiai_proxy
+ PGSQL_USER=postgres
+ PGSQL_PASSWORD=mysecretpassword
+ PGSQL_DEBUG_MODE=ok
+ ADMIN_API_KEY=br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ ```
+
+
+ ### Run it:
+
+ ```shell
+ npm run dev
+ # or
+ yarn dev
+ ```
+
+ If you have configured postgres, the tables will be created automatically.
+
+
+ ### Test it
+
+ - Use [BRClient](https://github.com/DamonDeng/BRClient) to test AI APIs.
+
+ - Use Postman to test it. 
+
+ - Some APIs' spec will be found in `test/api.rest`
+
+ ## Prod mode
+
+ Configure your environment variables.
+
+ Managed RDS for postgres is recommended.
+
+ ```shell
+ npm run build 
+
+ # then
+
+ node dist/server/node.js
+ ```
+
+ or 
+
+ refer to the [Dockerfile](./Dockerfile) to organize your folder and dependencies.
+
+ or
+
+ ```shell
+ yarn start
+ ```
+
+
+ ## Docker
+
+ Build Docker
+
+ Before you build docker, run  `npm run build` first.
+
+ Run directly:
+
+ ```shell
+ docker run --name brproxy \
+  -p 8866:8866 \
+  -e AWS_ACCESS_KEY_ID=xxxx \
+  -e AWS_SECRET_ACCESS_KEY=xxxxx \
+  -e AWS_DEFAULT_REGION=us-east-1 \
+  -e PGSQL_HOST=127.0.0.1 \
+  -e PGSQL_DATABASE=eiai_proxy \
+  -e PGSQL_USER=postgres \
+  -e PGSQL_PASSWORD=mysecretpassword \
+  -e ADMIN_API_KEY=br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx \
+  -d cloudbeer/brproxy:0.0.6
+ ```
+ 
+ 
 
 
 
