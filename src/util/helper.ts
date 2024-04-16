@@ -55,7 +55,7 @@ export default {
                 chatRequest.currency = "USD";
                 return chatRequest;
             case 'claude-3-opus':
-                chatRequest.model_id = "anthropic.claude-3-opus-20240307-v1:0";
+                chatRequest.model_id = "anthropic.claude-3-opus-20240229-v1:0";
                 chatRequest.anthropic_version = "bedrock-2023-05-31";
                 chatRequest.provider = "bedrock-claude3";
                 chatRequest.price_in = 15.00 / 1000000;
