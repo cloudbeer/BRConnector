@@ -81,15 +81,12 @@ const databaseHandler = async (ctx: any, next: any) => {
 };
 
 const loggerHandler = async (ctx: any, next: any) => {
-    // const myFormat = format.printf(({ level, message, label, timestamp }) => {
-    //     return `${timestamp} - ${level}: ${message}`;
-    // });
+
     const logger = createLogger({
         level: 'info',
         format: format.combine(
             format.timestamp(),
             format.prettyPrint(),
-            // myFormat
         ),
         defaultMeta: { service: 'brproxy', path: ctx.path },
         transports: [
@@ -103,9 +100,6 @@ const loggerHandler = async (ctx: any, next: any) => {
         logger.add(new transports.Console({
             format: format.splat(),
         }));
-        // logger.add(new transports.Console({
-        //     format: format.simple(),
-        // }));
     }
     ctx.logger = logger;
     await next();

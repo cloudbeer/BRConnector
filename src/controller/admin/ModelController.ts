@@ -14,10 +14,14 @@ class ModelController extends AbstractController {
 
     async saveKnowledgeBaseModel(ctx: any) {
         const data = ctx.request.body;
-        let { id, name, knowledgeBaseId, summaryModel, region } = data;
+        let { id, name, provider, object, multiple, owned_by, knowledgeBaseId, summaryModel, region } = data;
 
         if (!name) {
             throw new Error("name is required");
+        }
+
+        if (!provider) {
+            throw new Error("provider is required, now supported providers include: bedrock-knowledge-base");
         }
 
         if (!knowledgeBaseId) {
@@ -35,7 +39,7 @@ class ModelController extends AbstractController {
         }
 
         const config = JSON.stringify({
-            knowledgeBaseId, summaryModel, region
+            knowledgeBaseId, summaryModel, region, provider, object, multiple, owned_by
         });
 
         let result: any;

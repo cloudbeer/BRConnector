@@ -16,7 +16,7 @@ export default {
         }
 
         const conditions: any = {
-            cols: "name, created_at, updated_at",
+            cols: "name, config, created_at, updated_at",
             limit: limit,
             offset: offset,
             orderBy: "id desc"
