@@ -135,33 +135,14 @@ Then, open a new chat to test.
 
 If every thing goes well, you can start to chat.
 
-#### 7. Config BRConnector WebUI to manager the BRConnector server.
+#### 7. BRConnector WebUI.
 
-If you have not set the environment variable DISABLE_UI, you can now access the BRConnector WebUI via http://localhost:8866/. You can log in and manage it using the API key you just generated. Enter http://localhost:8866 as the Host.
+If you have not set the environment variable DISABLE_UI, you can now access the BRConnector WebUI via http://localhost:8866/. 
+
+You can log in and manage it using the API key you just generated. Enter http://localhost:8866 as the Host.
 
 
 ## Dev Mode
-
-### Run postgres locally:
-
- ```shell
- docker run --name postgres \
-   -e POSTGRES_PASSWORD=mysecretpassword \
-   -p 5432:5432 \
-   -d postgres
- ```
-
- Create an database named `brconnector_db`:
-
- ```shell
- docker exec -it postgres psql -U postgres
- ```
- and run
-
- ```sql
- CREATE DATABASE brconnector_db;
- ```
-
 
  ### Environment .env file
 
@@ -178,7 +159,7 @@ If you have not set the environment variable DISABLE_UI, you can now access the 
  ```
 
 
- ### Run Server
+ ### Run back-end
 
  ```shell
  npm run dev
@@ -189,7 +170,7 @@ If you have not set the environment variable DISABLE_UI, you can now access the 
  If you have configured postgres, the tables will be created automatically. 
 
 
- ### Run WebUI
+ ### Run fontend
 
  ```shell
  npm run dev-ui
@@ -210,7 +191,9 @@ yarn build
 
 The above command will compile the front-end and back-end applications into the dist/public and dist/server directories, respectively. 
 
-After a successful compilation, navigate to the dist/server directory and execute `node index.js`. If you have not disabled the WebUI, http://localhost:8866 will be bound to the WebUI.
+After a successful compilation, navigate to the dist/server directory and execute `node index.js`. 
+
+If you have not disabled the WebUI, http://localhost:8866 will be bound to the WebUI.
 
 ### Build back-end (Option)
 
@@ -219,7 +202,7 @@ npm run build-server
 # or
 yarn build-server
 ```
-### Build back-end (Option)
+### Build front-end (Option)
 
 ```shell
 npm run build-ui
