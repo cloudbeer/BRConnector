@@ -6,7 +6,8 @@ import { bodyParser } from "@koa/bodyparser"
 import cors from "@koa/cors"
 import { authHandler, errorHandler, databaseHandler, loggerHandler } from './middleware/handlers'
 import { router } from "./routes";
-
+import serve from "koa-static";
+import config from './config';
 
 import install from './install'
 
@@ -14,6 +15,7 @@ install();
 
 
 const app = new Koa();
+
 app.use(loggerHandler);
 
 app.use(errorHandler);
@@ -27,6 +29,10 @@ app.use(databaseHandler);
 app.use(authHandler);
 
 app.use(router.routes());
+
+if (!config.disableUI) {
+    app.use(serve("../public"));
+}
 
 const port = 8866;
 

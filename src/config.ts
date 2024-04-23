@@ -16,5 +16,6 @@ export default {
     },
     admin_api_key: process.env.ADMIN_API_KEY,
     debugMode: process.env.DEBUG_MODE || false, // set DEBUG_MODE=<empty> to disable
+    disableUI: process.env.DISABLE_UI || false,
 
 }

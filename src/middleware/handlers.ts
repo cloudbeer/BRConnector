@@ -8,13 +8,21 @@ import { createLogger, format, transports } from 'winston';
 const authHandler = async (ctx: any, next: any) => {
 
     const pathName = ctx.path;
-    if (pathName == "/") {
-        ctx.body = "ok"; // For health check.
+    if (pathName == "/" || pathName.indexOf("/assets/") >=0) {
+        // ctx.body = "ok"; // For health check.
+        if (config.disableUI) {
+            ctx.body = "ok";
+        }else{
+            await next();
+        }
         return;
     }
     if (pathName == "/favicon.ico") {
         ctx.body = "ok";
         return;
+    }
+    if (pathName == "/index.index") {
+
     }
 
     const authorization = ctx.header.authorization || "";
