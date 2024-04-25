@@ -13,7 +13,7 @@ const authHandler = async (ctx: any, next: any) => {
         return;
 
     }
-    if (pathName.indexOf("/web-ui") >= 0) {
+    if (pathName.indexOf("/webui") >= 0) {
         await next();
         return;
     }
