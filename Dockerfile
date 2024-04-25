@@ -1,10 +1,11 @@
 FROM node:20
 
-WORKDIR /app
 
-COPY ./dist/server .
+COPY ./dist /app
 
 COPY ./src/scripts/create.sql ./src/scripts/create.sql
+
+WORKDIR /app/server
 
 COPY ./package.json .
 
