@@ -7,10 +7,9 @@ English / [简体中文](./README_CN.md)
 
 </div>
 
+BRConnector is a bedrock API forwarding tool that can issue virtual keys, log chats, and manage costs.
 
-BRConnector is a bedrock API forwarding tool that can issue virtual keys, log chats, and manage costs. 
-
-It is compatible with [BRClient](https://github.com/DamonDeng/BRClient) and any other OPENAI client that can define Host and API Key.
+It is compatible with [BRClient](https://github.com/cloudbeer/BRClient) and any other OPENAI client that can define Host and API Key.
 
 ## Deploying BRConnector
 
@@ -18,10 +17,11 @@ Although this project is in rapic iterating, we still provide a relative easy wa
 
 Please follow these steps to deploy the BRConnector server:
 
-#### 1. Prepare a server to host BRConnector.
+#### 1. Prepare a server to host BRConnector
+
 Launch an EC2 on AWS or any other server with docker support.
 
-#### 2. Run postgres with docker:
+#### 2. Run postgres with docker
 
 Launch a docker container to host postgres with the following shell command:
 
@@ -34,9 +34,11 @@ docker run --name postgres \
 
 Then create a database named `brconnector_db` with the following command:
 At first, attach to the prostgress container:
+
 ```shell
 docker exec -it postgres psql -U postgres
 ```
+
 Then, in the SQL command line of postgres, run the following command to create the database:
 
 ```sql
@@ -45,7 +47,6 @@ CREATE DATABASE brconnector_db;
 
 The database name is not necessary to be `brconnector_db`, you can use what ever valid database name you want.
 If you use your own database name, make sure that you remember the database name and replace `brconnector_db` with your database name.
-
 
 #### 3. Start the BRConnector server with docker
 
@@ -75,7 +76,7 @@ Now, you have the first admin user with the API_KEY "br_xxxxxxxxxxxxxxxxxxxxxxxx
 
 And the BRConnector server export port 8866 to the hosting EC2.
 
-Test the server with the API_Key using `curl` command: 
+Test the server with the API_Key using `curl` command:
 
 ```shell
 curl "http://localhost:8866/admin/api-key/list"     -H "Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
@@ -84,11 +85,11 @@ curl "http://localhost:8866/admin/api-key/list"     -H "Authorization: Bearer br
 
 You will get something like the following if every things go well:
 
-```
+```json
 {"success":true,"data":{"items":[],"total":"0","limit":20,"offset":0}}
 ```
 
-#### 5. Creat the first admin user:
+#### 5. Creat the first admin user
 
 The API_KEY configed above is only used for booting the server and create first admin user.
 This API_KEY is not designed to be used as admin user or normal user.
@@ -98,24 +99,24 @@ Create the first admin user with the following command:
 ```shell
 curl -X POST "http://localhost:8866/admin/api-key/apply" \
      -H "Content-Type: application/json" \
-	 -H "Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" \
+  -H "Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" \
      -d '{"name": "adminuser","group_id": 1,"role": "admin","email": "", "month_quota":"20"}'
 
 ```
 
 You will get some response like the following:
 
-```shell
+```json
 
 {"success":true,"data":{"id":1,"name":"adminuser","email":"","api_key":"br-someotherkeyvaluexxxxx","role":"admin","month_quota":"20.0000000000","balance":"0.0000000000"}}
 
 ```
 
-Record the new api_key for the new user, 
+Record the new api_key for the new user,
 this api_key can be used to config BRClient to chat.
 and this api_key can be used to login BRConnector's WebUI to manage other users.
 
-#### 6. Config BRClient to connect to the BRConnector server.
+#### 6. Config BRClient to connect to the BRConnector server
 
 As BRClient only support HTTPS, you need to setup a SSL offload service in front of the BRConnector server.
 
@@ -135,16 +136,15 @@ Then, open a new chat to test.
 
 If every thing goes well, you can start to chat.
 
-#### 7. BRConnector WebUI.
+#### 7. BRConnector WebUI
 
-If you have not set the environment variable DISABLE_UI, you can now access the BRConnector WebUI via http://localhost:8866/. 
+If you have not set the environment variable DISABLE_UI, you can now access the BRConnector WebUI via <http://localhost:8866/>.
 
-You can log in and manage it using the API key you just generated. Enter http://localhost:8866 as the Host.
-
+You can log in and manage it using the API key you just generated. Enter <http://localhost:8866> as the Host.
 
 ## Dev Mode
 
- ### Environment .env file
+### Environment .env file
 
  Place it in the root directory of the project.
 
@@ -158,26 +158,23 @@ You can log in and manage it using the API key you just generated. Enter http://
  DEBUG_MODE=true
  ```
 
-
- ### Run back-end
+### Run back-end
 
  ```shell
  npm run dev
  # or
  yarn dev
  ```
- 
- If you have configured postgres, the tables will be created automatically. 
 
+ If you have configured postgres, the tables will be created automatically.
 
- ### Run fontend
+### Run fontend
 
  ```shell
  npm run dev-ui
  # or
  yarn dev-ui
  ```
-
 
 ## Build
 
@@ -189,11 +186,11 @@ npm run build
 yarn build
 ```
 
-The above command will compile the front-end and back-end applications into the dist/public and dist/server directories, respectively. 
+The above command will compile the front-end and back-end applications into the dist/public and dist/server directories, respectively.
 
-After a successful compilation, navigate to the dist/server directory and execute `node index.js`. 
+After a successful compilation, navigate to the dist/server directory and execute `node index.js`.
 
-If you have not disabled the WebUI, http://localhost:8866 will be bound to the WebUI.
+If you have not disabled the WebUI, <http://localhost:8866> will be bound to the WebUI.
 
 ### Build back-end (Option)
 
@@ -202,6 +199,7 @@ npm run build-server
 # or
 yarn build-server
 ```
+
 ### Build front-end (Option)
 
 ```shell
@@ -209,7 +207,6 @@ npm run build-ui
 # or
 yarn build-ui
 ```
-
 
 ## API Specification
 
@@ -316,7 +313,6 @@ GET /admin/session/list?q=&limit=10&offset=&key_id=
 Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
-
 List threads / histories
 
 ```text
@@ -324,9 +320,7 @@ GET /admin/thread/list?q=&limit=10&offset=&key_id=&session_id=
 Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
-
 ### User API
-
 
 My sessions
 
@@ -341,7 +335,6 @@ My session detail
 GET /user/session/detail/1
 Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
-
 
 My threads / histories
 
@@ -358,7 +351,6 @@ Authorization: Bearer br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
 ## Disclaimer
-
 
 BRConnector is an open-source software aimed at providing proxy services for using Bedrock Claude. We make our best efforts to ensure the security and legality of the software, but we are not responsible for the users' behavior.
 
