@@ -6,7 +6,7 @@ import { bodyParser } from "@koa/bodyparser"
 import cors from "@koa/cors"
 import { authHandler, errorHandler, databaseHandler, loggerHandler } from './middleware/handlers'
 import { router } from "./routes";
-import serve from "koa-static";
+import serve from "koa-static-server";
 import config from './config';
 
 import install from './install'
@@ -31,7 +31,11 @@ app.use(authHandler);
 app.use(router.routes());
 
 if (!config.disableUI) {
-    app.use(serve("../public"));
+    app.use(serve({
+        rootDir: './public',
+        rootPath: '/webui',
+        index: 'index.html'
+    }));
 }
 
 const port = 8866;
