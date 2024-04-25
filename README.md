@@ -63,11 +63,11 @@ docker run --name BRConnector \
  -e AWS_SECRET_ACCESS_KEY=xxxxx \
  -e AWS_DEFAULT_REGION=us-east-1 \
  -e PGSQL_HOST=172.17.0.1 \
- -e PGSQL_DATABASE=BRConnectordb \
+ -e PGSQL_DATABASE=brconnector_db \
  -e PGSQL_USER=postgres \
  -e PGSQL_PASSWORD=mysecretpassword \
  -e ADMIN_API_KEY=br_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx \
- -d bramily/BRConnector:0.0.1
+ -d cloudbeer/brconnector:0.0.1
 ```
 
 #### 4. Test the BRConnector server
