@@ -3,18 +3,18 @@
 ### /v1/chat/completions
 POST {{hostLocal}}/v1/chat/completions
 Content-Type: application/json
-Authorization: Bearer br-WP4elEV2VzZ7AGYsNEfvSrKPaQcZ6
+Authorization: Bearer br-So0fwKIbRQMl2mDshWIAZ8FQqwiZb
 
 {
-  "model": "claude-3-sonnet",
+  "model": "llama3-7b",
   "messages": [
     {
       "role": "user",
       "content": "ping"
     }
   ],
-  "stream": true,
-  "max_tokens": 4096
+  "stream": false,
+  "max_tokens": 2048
 }
 
 

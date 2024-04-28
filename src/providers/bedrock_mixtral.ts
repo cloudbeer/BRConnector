@@ -1,16 +1,24 @@
-import { ChatRequest, ResponseData } from "../entity/chat_request"
+import { ChatRequest, ResponseData } from "../entity/chat_request";
+import AbstractProvider from "./abstract_provider";
+import ChatMessageConverter from './chat_message';
+// import {
+//   BedrockAgentRuntimeClient,
+//   BedrockAgentRuntime,
+//   RetrieveCommand,
+// } from "@aws-sdk/client-bedrock-agent-runtime";
+
+import config from '../config';
+import WebResponse from "../util/response";
+
 import {
     BedrockRuntimeClient,
     InvokeModelCommand,
     InvokeModelWithResponseStreamCommand,
+    ResponseStream,
 } from "@aws-sdk/client-bedrock-runtime";
-import config from '../config';
-import WebResponse from "../util/response";
-import AbstractProvider from "./abstract_provider";
-import ChatMessageConverter from './chat_message'
 
-
-export default class BedrockClaude extends AbstractProvider {
+//TO be continue...
+export default class BedrockMixtral extends AbstractProvider {
 
     client: BedrockRuntimeClient;
     chatMessageConverter: ChatMessageConverter;
@@ -21,19 +29,16 @@ export default class BedrockClaude extends AbstractProvider {
     }
 
     async chat(chatRequest: ChatRequest, session_id: string, ctx: any) {
-        const payload = await this.chatMessageConverter.toClaude3Payload(chatRequest);
+
+        const payload = await this.chatMessageConverter.toMistralPayload(chatRequest);
 
         const body: any = {
-            "anthropic_version": chatRequest["anthropic_version"],
-            "max_tokens": chatRequest.max_tokens || 4096,
-            "messages": payload.messages,
+            "max_tokens": chatRequest.max_tokens || 32000,
+            "prompt": payload,
             "temperature": chatRequest.temperature || 1.0,
-            "top_p": chatRequest.top_p || 1,
-            "top_k": chatRequest["top_k"] || 50
         };
-        if (payload.systemPrompt && payload.systemPrompt.length > 0) {
-            body.system = JSON.stringify(payload.systemPrompt);
-        }
+
+        ctx.logger.debug(body);
 
         const input = {
             body: JSON.stringify(body),
@@ -58,7 +63,6 @@ export default class BedrockClaude extends AbstractProvider {
             ctx.body = await this.chatSync(ctx, input, chatRequest, session_id);
         }
     }
-
     async chatStream(ctx: any, input: any, chatRequest: ChatRequest, session_id: string) {
         let i = 0;
         try {
@@ -66,9 +70,25 @@ export default class BedrockClaude extends AbstractProvider {
             const response = await this.client.send(command);
 
 
+
             if (response.body) {
+                const streamResponse: AsyncIterable<ResponseStream> = response.body;
                 let responseText = "";
+                // const streams = response.body.options.messageStream;
+                console.log("response.body", streamResponse);
+                for await (const item of streamResponse) {
+
+                }
+
+                // const x = await response.body;
+                // console.log("response.x", x.options);
+                // for await (const item of response.body) {
+
+                // }
+
+                /*
                 for await (const item of response.body) {
+                    console.log("item", item);
                     if (item.chunk?.bytes) {
                         const decodedResponseBody = new TextDecoder().decode(
                             item.chunk.bytes,
@@ -103,6 +123,7 @@ export default class BedrockClaude extends AbstractProvider {
                         }
                     }
                 }
+                */
             } else {
                 ctx.res.write("id: " + (i + 1) + "\n");
                 ctx.res.write("event: message\n");

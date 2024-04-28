@@ -73,6 +73,9 @@ const errorHandler = async (ctx: any, next: any) => {
         await next();
     } catch (ex: any) {
         ctx.logger.error(ex.message);
+        if (config.debugMode) {
+            console.log(ex);
+        }
         ctx.body = response.error(ex.message);
     }
 };

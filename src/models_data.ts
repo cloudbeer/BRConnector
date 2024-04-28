@@ -20,7 +20,23 @@ export default [
         "object": "model",
         "multiple": true,
         "created": 1712297572,
-        "deleted": true,
+        "deleted": false,
+        "owned_by": "aws-bedrock"
+    },
+    {
+        "id": "llama3-8b",
+        "object": "model",
+        "multiple": false,
+        "created": 1712297572,
+        "deleted": false,
+        "owned_by": "aws-bedrock"
+    },
+    {
+        "id": "llama3-70b",
+        "object": "model",
+        "multiple": false,
+        "created": 1712297572,
+        "deleted": false,
         "owned_by": "aws-bedrock"
     },
 ]

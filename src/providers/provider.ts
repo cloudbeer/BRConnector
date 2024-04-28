@@ -1,13 +1,17 @@
 import { ChatRequest } from "../entity/chat_request"
 import helper from '../util/helper';
 import api_key from "../service/key";
-// Providers
 import AbstractProvider from "./abstract_provider";
+// Providers
 import BedrockClaude from "./bedrock_claude";
+import BedrockMixtral from "./bedrock_mixtral";
+import BedrockLlama3 from "./bedrock_llama3"
 
 class Provider {
     constructor() {
         this["bedrock-claude3"] = new BedrockClaude();
+        this["bedrock-mistral"] = new BedrockMixtral();
+        this["bedrock-llama3"] = new BedrockLlama3();
     }
     async chat(ctx: any) {
         const keyData = await api_key.loadById(ctx.db, ctx.user.id);
