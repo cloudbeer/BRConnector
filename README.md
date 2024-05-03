@@ -58,6 +58,7 @@ And, important! replace the value of ADMIN_API_KEY to be a complex key instead o
 
 ```shell
 docker run --name BRConnector \
+ --restart always \
  -p 8866:8866 \
  -e AWS_ACCESS_KEY_ID=xxxx \
  -e AWS_SECRET_ACCESS_KEY=xxxxx \

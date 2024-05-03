@@ -11,7 +11,6 @@ const authHandler = async (ctx: any, next: any) => {
     if (pathName == "/") {
         ctx.body = "ok";
         return;
-
     }
     if (pathName.indexOf("/webui") >= 0) {
         await next();
