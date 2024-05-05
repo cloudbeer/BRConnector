@@ -12,7 +12,7 @@ import {
   InvokeModelWithResponseStreamCommand,
 } from "@aws-sdk/client-bedrock-runtime";
 
-//TO be continue...
+// In dev-ing
 export default class BedrockClaude extends AbstractProvider {
 
   client: BedrockRuntimeClient;

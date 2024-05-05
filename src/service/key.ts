@@ -85,6 +85,14 @@ export default {
 
     },
 
+    async rebillMonthly(db: any, id: number) {
+        const updateData: any = {
+            id,
+            month_fee: 0
+        };
+        return await db.update("eiai_key", updateData, ["id"]);
+    },
+
     async update(db: any, data: any) {
         if (!data.id) {
             throw new Error("id is required");

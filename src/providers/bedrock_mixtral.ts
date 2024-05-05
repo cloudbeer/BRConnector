@@ -1,11 +1,6 @@
 import { ChatRequest, ResponseData } from "../entity/chat_request";
 import AbstractProvider from "./abstract_provider";
 import ChatMessageConverter from './chat_message';
-// import {
-//   BedrockAgentRuntimeClient,
-//   BedrockAgentRuntime,
-//   RetrieveCommand,
-// } from "@aws-sdk/client-bedrock-agent-runtime";
 
 import config from '../config';
 import WebResponse from "../util/response";
@@ -17,7 +12,7 @@ import {
     ResponseStream,
 } from "@aws-sdk/client-bedrock-runtime";
 
-//TO be continue...
+// SDK Not ready for Mistral...
 export default class BedrockMixtral extends AbstractProvider {
 
     client: BedrockRuntimeClient;

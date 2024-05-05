@@ -1,12 +1,6 @@
 import { ChatRequest, ResponseData } from "../entity/chat_request";
 import AbstractProvider from "./abstract_provider";
 import ChatMessageConverter from './chat_message';
-// import {
-//   BedrockAgentRuntimeClient,
-//   BedrockAgentRuntime,
-//   RetrieveCommand,
-// } from "@aws-sdk/client-bedrock-agent-runtime";
-
 import config from '../config';
 import WebResponse from "../util/response";
 
@@ -17,7 +11,7 @@ import {
     ResponseStream,
 } from "@aws-sdk/client-bedrock-runtime";
 
-//TO be continue...
+
 export default class BedrockLlama3 extends AbstractProvider {
 
     client: BedrockRuntimeClient;

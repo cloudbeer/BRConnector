@@ -36,16 +36,16 @@ class Provider {
         const month_quota = parseFloat(key.month_quota);
         const balance = parseFloat(key.balance);
 
+        // console.log(key, month_fee);
+
         if (month_fee > 0) {
             // New month set it to 0
             const lastUpdate = new Date(key.updated_at);
             const now = new Date();
+
             if (now.getMonth() != lastUpdate.getMonth() || now.getFullYear() > lastUpdate.getFullYear()) {
-                month_fee = 0;
-                await api_key.update(ctx.db, {
-                    id: ctx.user.id,
-                    month_fee: 0
-                });
+                await api_key.rebillMonthly(ctx.db, ctx.user.id);
+                key.month_fee = 0;
             }
         }
         if (month_fee >= month_quota && balance <= 0) {
