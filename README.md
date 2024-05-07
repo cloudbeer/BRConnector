@@ -1,5 +1,4 @@
 <div align="center">
-<img src="./src/public/img/bedrock_32.svg" alt="icon"/>
 
 <h1 align="center">BRConnector</h1>
 
