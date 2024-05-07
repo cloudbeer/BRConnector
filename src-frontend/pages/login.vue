@@ -79,7 +79,7 @@ export default {
 
   &::before {
     content: '';
-    background: url(@/assets/img/back.avif);
+    background: #252F3E;
     background-repeat: no-repeat;
     background-size: cover;
     width: 100%;
@@ -103,7 +103,7 @@ export default {
   }
 
   .login-box {
-    background-color: #ffffffb5;
+    background-color: #ffffff;
     width: 500px;
     height: 300px;
     position: absolute;
