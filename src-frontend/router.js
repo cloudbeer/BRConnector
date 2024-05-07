@@ -72,7 +72,7 @@ const router = new VueRouter({
           meta: { title: '话题列表', icon: Menu },
           component: () => import(/*webpackChunkName:'Home'*/'./pages/sessions'),
           // hidden: localStorage.getItem('role') != 'admin',
-          // hidden: true,
+          hidden: true,
         },
         {
           path: '/admin/sessions/:session_id/threads',
