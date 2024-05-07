@@ -1,6 +1,6 @@
 export default {
   login: {
-    title: '登录 BRProxy',
+    title: '登录 BRConnector',
     btn: '登录'
   },
   menu: {

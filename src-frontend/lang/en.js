@@ -1,6 +1,6 @@
 export default {
   login: {
-    title: 'Sign in to BRProxy',
+    title: 'Sign in to BRConnector',
     btn: 'Sign in'
   },
   menu: {

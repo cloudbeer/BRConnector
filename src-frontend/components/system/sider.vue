@@ -1,9 +1,8 @@
 <template>
   <Sider class="sys-sider" :style="{ width: collapsed ? '60px' : '200px' }">
     <div class="logo-box">
-      <img src="/favicon.svg" class="logo" />
       <transition>
-        <span v-show="!collapsed">BRProxy</span>
+        <span v-show="!collapsed">BRConnector</span>
       </transition>
     </div>
     <Menu mode="inline" class="sys-menu" v-model="activeMenu" @open-change="openChange" :open-keys="openKeys"
